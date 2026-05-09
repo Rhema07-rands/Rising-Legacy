@@ -1,0 +1,45 @@
+.mb-4 { margin-bottom: 1.5rem; }
+
+.section-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+}
+
+.grade-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.grade-A { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+.grade-B { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+.grade-C { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+.grade-D { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
+.grade-E { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+.grade-F { background: rgba(220, 38, 38, 0.2); color: #ef4444; }
+
+.cgpa-icon { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+.highlight { font-size: 2.5rem; font-weight: 700; color: #fff; }
+.text-success { color: #34d399; font-weight: 500; }

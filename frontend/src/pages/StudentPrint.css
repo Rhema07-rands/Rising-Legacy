@@ -1,0 +1,245 @@
+/* === Print Page Base Layout === */
+.print-container {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+}
+
+.print-controls {
+  display: flex;
+  justify-content: space-between;
+  max-width: 900px;
+  margin: 0 auto 20px auto;
+  background: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.print-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.print-btn.primary {
+  background: #0b5394;
+  color: white;
+}
+
+.print-btn.primary:hover { background: #073763; }
+
+.print-btn.secondary {
+  background: #e2e8f0;
+  color: #333;
+}
+
+.print-btn.secondary:hover { background: #cbd5e1; }
+
+
+/* === The Document Design (Matches BIU Screenshot) === */
+.print-document {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  padding: 40px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  color: #333;
+}
+
+.doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.doc-brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.uni-name {
+  color: #0b5394;
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.doc-title-bar {
+  background: #0b5394;
+  color: white;
+  padding: 15px 30px;
+  margin-top: 10px;
+}
+
+.doc-title-bar h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.doc-info-section {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1.5fr;
+  gap: 20px;
+  background: #f8fafc;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.student-profile {
+  display: flex;
+  gap: 15px;
+}
+
+.profile-photo {
+  width: 90px;
+  height: 110px;
+  background: #e2e8f0;
+  border: 1px solid #cbd5e1;
+}
+
+.profile-details p, .contact-details p, .registration-details p {
+  margin: 0 0 6px 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.section-heading {
+  color: #0b5394;
+  font-size: 1rem;
+  margin: 0 0 10px 0;
+  font-weight: 400;
+}
+
+.contact-details a {
+  color: #0b5394;
+  text-decoration: none;
+}
+
+.registration-details {
+  position: relative;
+}
+
+.large-level-indicator {
+  margin-top: 15px;
+}
+
+.large-level-indicator h3 {
+  color: #0b5394;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 400;
+}
+
+.level-number {
+  color: #0b5394;
+  font-size: 3.5rem;
+  line-height: 1;
+}
+
+/* === Table Design === */
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+  margin-bottom: 40px;
+}
+
+.doc-table th {
+  background: #555555;
+  color: white;
+  text-align: left;
+  padding: 8px;
+  font-weight: normal;
+  border-right: 1px dashed rgba(255,255,255,0.3);
+}
+
+.doc-table th:last-child { border-right: none; }
+
+.doc-table td {
+  padding: 8px;
+  border-bottom: 1px solid white;
+}
+
+.doc-table tbody tr {
+  background: #eef2f9;
+}
+
+.doc-table tbody tr:nth-child(even) {
+  background: #e4eaf3;
+}
+
+.col-code { width: 12%; color: #0b5394; }
+.col-title { width: 50%; }
+.col-units { width: 10%; text-align: center; }
+.col-sem { width: 10%; text-align: center; }
+.col-grade { width: 8%; text-align: center; font-weight: bold; }
+.col-gp { width: 10%; text-align: center; font-weight: bold; }
+
+.text-right { text-align: right; }
+
+.subtotal-row td, .session-total-row td {
+  background: #e4eaf3 !important;
+  font-weight: normal;
+  padding: 12px 8px;
+}
+
+/* === Signatures & Footer === */
+.signatures {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  background: #f8fafc;
+  padding: 20px;
+}
+
+.sig-line p {
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.footer-brand p {
+  color: #0b5394;
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+/* === Print CSS overrides === */
+@media print {
+  body {
+    background: white;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-container {
+    padding: 0;
+    background: white;
+  }
+  .print-document {
+    padding: 0;
+    box-shadow: none;
+    max-width: 100%;
+  }
+  /* Force exact colors when printing */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

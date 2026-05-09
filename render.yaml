@@ -1,0 +1,47 @@
+# render.yaml — Render Blueprint for Rising Legacy Grading System
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  # ──────────────────────────────────────────────
+  # 1. FastAPI Backend (Python)
+  # ──────────────────────────────────────────────
+  - type: web
+    name: rising-legacy-backend
+    env: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: TIDB_HOST
+        sync: false          # Set manually in the Render dashboard
+      - key: TIDB_PORT
+        value: "4000"
+      - key: TIDB_USER
+        sync: false
+      - key: TIDB_PASS
+        sync: false
+      - key: TIDB_DB
+        value: test
+
+  # ──────────────────────────────────────────────
+  # 2. React Frontend (Static Site)
+  # ──────────────────────────────────────────────
+  - type: web
+    name: rising-legacy-frontend
+    env: static
+    region: oregon
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        # After backend deploys, paste its URL here (e.g. https://rising-legacy-backend.onrender.com)
+        sync: false
+    routes:
+      # SPA fallback — all routes resolve to index.html
+      - type: rewrite
+        source: /*
+        destination: /index.html
