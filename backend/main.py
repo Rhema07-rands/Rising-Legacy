@@ -238,13 +238,29 @@ def register_courses(student_id: int, request: schemas.CourseRegistrationRequest
     if not student:
         raise HTTPException(status_code=404, detail="Student not found")
         
-    # For a real system, you'd have a Registration table.
-    # For now, we will create empty Grade records (score=0, letter='–', gp=0) for these courses
-    registered_count = 0
-    for code in request.course_codes:
-        # Check if already exists
-        existing = db.query(models.Grade).filter(models.Grade.student_id == student_id, models.Grade.course_code == code).first()
-        if not existing:
+    # Get currently registered courses
+    existing_grades = db.query(models.Grade).filter(models.Grade.student_id == student_id).all()
+    existing_codes = {g.course_code: g for g in existing_grades}
+    
+    requested_codes = set(request.course_codes)
+    
+    # Check for deregistration
+    courses_to_remove = []
+    for code, grade in existing_codes.items():
+        if code not in requested_codes:
+            # Check if graded
+            if grade.grade_letter != '–' or grade.score > 0:
+                raise HTTPException(status_code=400, detail=f"Cannot deregister {code}. Please ask for lecturer approval.")
+            courses_to_remove.append(grade)
+            
+    # Remove courses
+    for grade in courses_to_remove:
+        db.delete(grade)
+        
+    # Add new courses
+    added_count = 0
+    for code in requested_codes:
+        if code not in existing_codes:
             new_reg = models.Grade(
                 student_id=student_id,
                 course_code=code,
@@ -253,8 +269,8 @@ def register_courses(student_id: int, request: schemas.CourseRegistrationRequest
                 gp=0.0
             )
             db.add(new_reg)
-            registered_count += 1
+            added_count += 1
             
     db.commit()
-    return {"message": f"Successfully registered for {registered_count} courses."}
+    return {"message": f"Successfully updated registration. Added {added_count}, Removed {len(courses_to_remove)}."}
 

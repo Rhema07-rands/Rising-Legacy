@@ -50,6 +50,12 @@ export default function CourseRegistration() {
         // Fetch courses list
         const courseRes = await axios.get(`${API_BASE}/courses`);
         setCourses(courseRes.data);
+
+        // Fetch already registered courses
+        const gradesRes = await axios.get(`${API_BASE}/students/${studentProfile.id}/grades`);
+        const registeredCodes = gradesRes.data.grades.map(g => g.course_code);
+        setSelectedCourses(registeredCodes);
+        
       } catch (err) {
         console.error("Failed to load data", err);
         setError("Failed to load profile data.");
@@ -100,7 +106,7 @@ export default function CourseRegistration() {
       window.scrollTo(0, 0);
     } catch (err) {
       console.error(err);
-      setError("Failed to save registration. Please try again.");
+      setError(err.response?.data?.detail || "Failed to save registration. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
