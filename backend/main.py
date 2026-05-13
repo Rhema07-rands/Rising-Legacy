@@ -47,6 +47,56 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
+@app.post("/admin/enroll-student", status_code=status.HTTP_201_CREATED)
+def enroll_student(req: schemas.EnrollStudentRequest, db: Session = Depends(get_db)):
+    # 1. Check if user already exists
+    if db.query(models.User).filter(models.User.username == req.student_id).first():
+        raise HTTPException(status_code=400, detail="Student ID already registered")
+        
+    # 2. Create User
+    # In a real app, hash "password123" properly
+    fake_hashed_password = "password123" + "notreallyhashed"
+    new_user = models.User(
+        username=req.student_id,
+        password_hash=fake_hashed_password,
+        role=models.RoleEnum.student
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    
+    # 3. Create Student Profile
+    new_student = models.Student(
+        user_id=new_user.id,
+        full_name=req.full_name,
+        matric_no=req.student_id,
+        department=req.department,
+        current_level=req.level,
+        enrollment_year=2024 # Or derive from somewhere
+    )
+    db.add(new_student)
+    db.commit()
+    db.refresh(new_student)
+    
+    return {"message": "Student enrolled successfully", "student": new_student}
+
+@app.get("/admin/students")
+def get_all_students(db: Session = Depends(get_db)):
+    students = db.query(models.Student).all()
+    result = []
+    for s in students:
+        t = db.query(models.Transcript).filter(models.Transcript.student_id == s.id).first()
+        result.append({
+            "id": s.id,
+            "student_id": s.matric_no,
+            "full_name": s.full_name,
+            "level": s.current_level,
+            "department": s.department,
+            "cgpa": t.cgpa if t else 0.0,
+            "degree_classification": t.degree_classification if t else "N/A"
+        })
+    return result
+
 @app.post("/grades/upload", response_model=schemas.GradeResponse)
 def upload_grade(grade: schemas.GradeUpload, db: Session = Depends(get_db)):
     # 1. Validate student and course exist

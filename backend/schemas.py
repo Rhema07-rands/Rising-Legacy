@@ -84,3 +84,9 @@ class StudentProfileResponse(StudentProfileBase):
 
 class CourseRegistrationRequest(BaseModel):
     course_codes: List[str]
+
+class EnrollStudentRequest(BaseModel):
+    student_id: str
+    full_name: str
+    level: int
+    department: str

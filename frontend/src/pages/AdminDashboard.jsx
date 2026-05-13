@@ -2,6 +2,9 @@ import React from 'react';
 import Sidebar from '../components/Sidebar';
 import StatCard from '../components/StatCard';
 import { Users, BookOpen, GraduationCap, TrendingUp, Search, Bell, FileText, Settings } from 'lucide-react';
+import axios from 'axios';
+import API_BASE from '../api';
+import EnrollStudentModal from '../components/EnrollStudentModal';
 import '../components.css';
 
 const recentGrades = [
@@ -13,13 +16,34 @@ const recentGrades = [
 ];
 
 const quickActions = [
-  { label: 'Generate Transcript', icon: FileText,     color: '#6366f1' },
-  { label: 'Enroll New Student',  icon: Users,        color: '#8b5cf6' },
-  { label: 'Create Course',       icon: BookOpen,     color: '#ec4899' },
-  { label: 'System Settings',     icon: Settings,     color: '#64748b' },
+  { id: 'enroll', label: 'Enroll New Student',  icon: Users,        color: '#8b5cf6' },
+  { id: 'transcript', label: 'Generate Transcript', icon: FileText,     color: '#6366f1' },
+  { id: 'course', label: 'Create Course',       icon: BookOpen,     color: '#ec4899' },
+  { id: 'settings', label: 'System Settings',     icon: Settings,     color: '#64748b' },
 ];
 
-const AdminDashboard = () => (
+const AdminDashboard = () => {
+  const [students, setStudents] = useState([]);
+  const [isEnrollModalOpen, setEnrollModalOpen] = useState(false);
+
+  const fetchStudents = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/admin/students`);
+      setStudents(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const handleActionClick = (id) => {
+    if (id === 'enroll') setEnrollModalOpen(true);
+  };
+
+  return (
   <div className="dashboard-layout">
     <Sidebar role="Admin" userName="Administrator" />
 
@@ -75,7 +99,7 @@ const AdminDashboard = () => (
         {/* Recent Grades Table */}
         <div className="glass-panel" style={{ padding: '24px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h3 style={{ fontSize: '1.1rem' }}>Recent Grade Submissions</h3>
+            <h3 style={{ fontSize: '1.1rem' }}>Registered Students</h3>
             <button className="btn btn-secondary" style={{ padding: '6px 14px', fontSize: '0.8rem' }}>View All</button>
           </div>
 
@@ -83,30 +107,23 @@ const AdminDashboard = () => (
           <table className="premium-table">
             <thead>
               <tr>
-                <th>Student</th>
-                <th>Course</th>
-                <th>Grade</th>
-                <th>GP</th>
-                <th>Status</th>
+                <th>Student ID</th>
+                <th>Full Name</th>
+                <th>Level</th>
+                <th>Department</th>
+                <th>CGPA</th>
               </tr>
             </thead>
             <tbody>
-              {recentGrades.map((row, i) => (
+              {students.length === 0 ? (
+                <tr><td colSpan="5" style={{textAlign: 'center', padding: '15px'}}>No students enrolled yet.</td></tr>
+              ) : students.map((row, i) => (
                 <tr key={i}>
-                  <td style={{ fontWeight: '600' }}>{row.name}</td>
-                  <td style={{ color: 'var(--text-secondary)', fontFamily: 'monospace', fontSize: '0.85rem' }}>{row.course}</td>
-                  <td>
-                    <span style={{
-                      background: 'rgba(99,102,241,0.12)', color: 'var(--accent-primary)',
-                      padding: '3px 12px', borderRadius: '12px', fontWeight: '700', fontSize: '0.85rem',
-                    }}>{row.grade}</span>
-                  </td>
-                  <td style={{ color: 'var(--text-secondary)' }}>{row.gp.toFixed(1)}</td>
-                  <td>
-                    <span style={{ color: row.status === 'Verified' ? '#10b981' : '#f59e0b', fontSize: '0.85rem', fontWeight: '500' }}>
-                      {row.status === 'Verified' ? '✓' : '⏳'} {row.status}
-                    </span>
-                  </td>
+                  <td style={{ color: 'var(--text-secondary)', fontFamily: 'monospace', fontSize: '0.85rem' }}>{row.student_id}</td>
+                  <td style={{ fontWeight: '600' }}>{row.full_name}</td>
+                  <td>{row.level}L</td>
+                  <td style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{row.department}</td>
+                  <td style={{ fontWeight: '700', color: 'var(--accent-primary)' }}>{row.cgpa.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
@@ -119,7 +136,7 @@ const AdminDashboard = () => (
           <h3 style={{ fontSize: '1.1rem', marginBottom: '20px' }}>Quick Actions</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {quickActions.map((action, i) => (
-              <button key={i} className="action-card" style={{
+              <button key={i} onClick={() => handleActionClick(action.id)} className="action-card" style={{
                 display: 'flex', alignItems: 'center', gap: '14px', padding: '14px 16px',
                 background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)',
                 borderRadius: 'var(--border-radius-md)', color: 'var(--text-primary)',
@@ -151,7 +168,17 @@ const AdminDashboard = () => (
         </div>
       </div>
     </main>
+
+    <EnrollStudentModal 
+      isOpen={isEnrollModalOpen} 
+      onClose={() => setEnrollModalOpen(false)}
+      onSuccess={() => {
+        setEnrollModalOpen(false);
+        fetchStudents();
+      }}
+    />
   </div>
-);
+  );
+};
 
 export default AdminDashboard;
