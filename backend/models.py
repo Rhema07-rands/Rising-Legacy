@@ -46,6 +46,7 @@ class Course(Base):
     course_title = Column(String(200))
     credit_units = Column(Integer)
     semester = Column(String(20)) # e.g., "First", "Second"
+    level = Column(Integer) # e.g., 100, 200, 300, 400
 
     grades = relationship("Grade", back_populates="course")
 
@@ -69,5 +70,6 @@ class Transcript(Base):
     student_id = Column(Integer, ForeignKey("students.id"))
     issue_date = Column(Date, default=date.today)
     cgpa = Column(Float)
+    degree_classification = Column(String(50))
 
     student = relationship("Student", back_populates="transcripts")

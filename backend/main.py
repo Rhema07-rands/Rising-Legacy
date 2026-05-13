@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import models
 import schemas
 from database import engine, get_db
-from services.gpa_calculator import calculate_grade_point, calculate_cgpa
+from services.gpa_calculator import calculate_grade_point, calculate_cgpa, get_degree_classification
 
 load_dotenv()  # Loads backend/.env when running locally
 
@@ -91,8 +91,13 @@ def upload_grade(grade: schemas.GradeUpload, db: Session = Depends(get_db)):
     transcript = db.query(models.Transcript).filter(models.Transcript.student_id == grade.student_id).first()
     if transcript:
         transcript.cgpa = new_cgpa
+        transcript.degree_classification = get_degree_classification(new_cgpa)
     else:
-        new_transcript = models.Transcript(student_id=grade.student_id, cgpa=new_cgpa)
+        new_transcript = models.Transcript(
+            student_id=grade.student_id, 
+            cgpa=new_cgpa, 
+            degree_classification=get_degree_classification(new_cgpa)
+        )
         db.add(new_transcript)
 
     db.commit()
@@ -143,6 +148,7 @@ def get_student_grades(student_id: int, db: Session = Depends(get_db)):
             "course_title": course.course_title if course else "Unknown",
             "credit_units": course.credit_units if course else 0,
             "semester": course.semester if course else "Unknown",
+            "level": course.level if course else None,
             "score": g.score,
             "grade_letter": g.grade_letter,
             "gp": g.gp
@@ -151,6 +157,7 @@ def get_student_grades(student_id: int, db: Session = Depends(get_db)):
     return {
         "student_id": student.id,
         "cgpa": transcript.cgpa if transcript else 0.0,
+        "degree_classification": transcript.degree_classification if transcript else "N/A",
         "grades": grade_data
     }
 

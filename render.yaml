@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=
 # render.yaml — Render Blueprint for Rising Legacy Grading System
 # Docs: https://render.com/docs/blueprint-spec
 
@@ -7,7 +8,7 @@ services:
   # ──────────────────────────────────────────────
   - type: web
     name: rising-legacy-backend
-    env: python
+    runtime: python
     region: oregon
     plan: free
     rootDir: backend
@@ -30,7 +31,7 @@ services:
   # ──────────────────────────────────────────────
   - type: web
     name: rising-legacy-frontend
-    env: static
+    runtime: static
     region: oregon
     plan: free
     rootDir: frontend

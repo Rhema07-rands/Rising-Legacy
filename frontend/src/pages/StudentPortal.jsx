@@ -27,6 +27,7 @@ export default function StudentPortal() {
   const navigate = useNavigate();
   const [grades, setGrades] = useState([]);
   const [currentCgpa, setCurrentCgpa] = useState(0.0);
+  const [degreeClass, setDegreeClass] = useState("N/A");
   const [isLoading, setIsLoading] = useState(true);
   const [selectedLevel, setSelectedLevel] = useState('All');
   const [selectedSemester, setSelectedSemester] = useState('All');
@@ -46,6 +47,7 @@ export default function StudentPortal() {
         const res = await axios.get(`${API_BASE}/students/${studentProfile.id}/grades`);
         setGrades(res.data.grades);
         setCurrentCgpa(res.data.cgpa);
+        setDegreeClass(res.data.degree_classification || "N/A");
       } catch (err) {
         console.error("Failed to fetch grades", err);
       } finally {
@@ -56,17 +58,23 @@ export default function StudentPortal() {
   }, []);
 
   const cls = classification(currentCgpa);
+  // Prefer API classification if available and valid
+  const displayClassLabel = degreeClass !== "N/A" ? degreeClass : cls.label;
 
-  const userName = user?.username ? user.username.charAt(0).toUpperCase() + user.username.slice(1) : "Adaeze Okonkwo";
+  const userName = user?.username ? user.username.charAt(0).toUpperCase() + user.username.slice(1) : "Student";
 
   // Filter grades
   const filteredGrades = grades.filter(g => {
     let match = true;
     if (selectedLevel !== 'All') {
-      // Deduce level from course code (e.g., CSC 111 -> 100)
-      const codeMatches = g.course_code.match(/\d+/);
-      const levelDigit = codeMatches ? codeMatches[0][0] : null;
-      if (levelDigit + "00" !== selectedLevel) match = false;
+      if (g.level) {
+        if (g.level.toString() !== selectedLevel) match = false;
+      } else {
+        // Fallback: Deduce level from course code (e.g., CSC 111 -> 100)
+        const codeMatches = g.course_code.match(/\d+/);
+        const levelDigit = codeMatches ? codeMatches[0][0] : null;
+        if (levelDigit + "00" !== selectedLevel) match = false;
+      }
     }
     if (selectedSemester !== 'All') {
       if (g.semester.toLowerCase() !== selectedSemester.toLowerCase()) match = false;
@@ -87,7 +95,7 @@ export default function StudentPortal() {
         <div className="stats-grid">
           {[
             { label: 'Current CGPA',    value: currentCgpa.toFixed(2), icon: Award,     color: '#f59e0b' },
-            { label: 'Classification',  value: cls.label,   icon: TrendingUp, color: cls.color, small: true },
+            { label: 'Classification',  value: displayClassLabel,   icon: TrendingUp, color: cls.color, small: true },
             { label: 'Courses Filtered',   value: filteredGrades.length, icon: BookOpen,  color: '#6366f1' },
             { label: 'Filtered Credits',   value: filteredGrades.reduce((a,g) => a + (g.credit_units || 0), 0), icon: FileText, color: '#8b5cf6' },
           ].map((s, i) => (

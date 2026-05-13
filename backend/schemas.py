@@ -49,6 +49,7 @@ class CourseResponse(BaseModel):
     course_title: str
     credit_units: int
     semester: str
+    level: Optional[int] = None
     
     class Config:
         from_attributes = True
@@ -56,6 +57,7 @@ class CourseResponse(BaseModel):
 class TranscriptResponse(BaseModel):
     student_id: int
     cgpa: float
+    degree_classification: Optional[str] = None
     
     class Config:
         from_attributes = True

@@ -9,6 +9,7 @@ export default function StudentPrint() {
   const [firstSemester, setFirstSemester] = useState([]);
   const [secondSemester, setSecondSemester] = useState([]);
   const [cgpa, setCgpa] = useState("0.00");
+  const [degreeClass, setDegreeClass] = useState("N/A");
   const [isLoading, setIsLoading] = useState(true);
 
   const [profile, setProfile] = useState({
@@ -46,6 +47,7 @@ export default function StudentPrint() {
         setFirstSemester(grades.filter(g => g.semester === 'First'));
         setSecondSemester(grades.filter(g => g.semester === 'Second'));
         setCgpa(res.data.cgpa.toFixed(2));
+        setDegreeClass(res.data.degree_classification || "N/A");
       } catch (err) {
         console.error("Failed to fetch print data", err);
       } finally {
@@ -130,6 +132,7 @@ export default function StudentPrint() {
             <p><strong>Session:</strong> {profile.session}</p>
             <p><strong>Total Credits Registered:</strong> {totalUnits} UNITS</p>
             <p><strong>Current CGPA:</strong> {cgpa}</p>
+            <p><strong>Classification:</strong> <span style={{ fontWeight: 700, color: '#0b5394' }}>{degreeClass}</span></p>
             
             <div className="large-level-indicator">
               <h3>LEVEL</h3>
