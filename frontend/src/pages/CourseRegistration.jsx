@@ -181,7 +181,7 @@ export default function CourseRegistration() {
           <h2 style={{ fontSize: '1.2rem', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <BookOpen size={20} color="var(--accent-primary)" /> Register Courses
           </h2>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>Select the courses you are registering for this session. The lecturer will grade these.</p>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>Select the courses you are registering for this session.</p>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '15px' }}>
             {courses.map(c => (

@@ -6,7 +6,6 @@ import API_BASE from '../api';
 
 const DEMO_USERS = {
   admin:    { password: 'admin123',    role: 'Admin',    path: '/admin',    name: 'Administrator' },
-  lecturer: { password: 'lecturer123', role: 'Lecturer', path: '/lecturer', name: 'Dr. Amaka Obi' },
   student:  { password: 'student123',  role: 'Student',  path: '/student',  name: 'Adaeze Okonkwo' },
 };
 
@@ -36,9 +35,9 @@ const Login = () => {
         localStorage.setItem('student_profile', JSON.stringify(student_profile));
       }
 
-      if (user.role === 'Admin') navigate('/admin');
-      else if (user.role === 'Lecturer') navigate('/lecturer');
-      else if (user.role === 'Student') navigate('/student');
+      const role = user.role.toLowerCase();
+      if (role === 'admin') navigate('/admin');
+      else if (role === 'student') navigate('/student');
       
     } catch (err) {
       setError(err.response?.data?.detail || 'Invalid username or password. Ensure backend is running.');
@@ -108,7 +107,7 @@ const Login = () => {
               <input
                 type="text"
                 className="input-field"
-                placeholder="admin / lecturer / student"
+                placeholder="Enter your username"
                 style={{ paddingLeft: '40px' }}
                 value={username}
                 onChange={e => setUsername(e.target.value)}
@@ -159,8 +158,7 @@ const Login = () => {
             color: 'var(--text-secondary)', fontFamily: 'monospace',
           }}>
             <div><span style={{ color: '#a5b4fc' }}>admin</span>    / admin123</div>
-            <div><span style={{ color: '#6ee7b7' }}>lecturer</span> / lecturer123</div>
-            <div><span style={{ color: '#fcd34d' }}>student</span>  / student123</div>
+            <div><span style={{ color: '#fcd34d' }}>student</span>  / password123</div>
           </div>
         </details>
       </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Users, BookOpen, Settings,
-  LogOut, FileText, GraduationCap, UploadCloud, Menu, X
+  LogOut, FileText, GraduationCap, Menu, X
 } from 'lucide-react';
 
 const navConfig = {
@@ -13,11 +13,6 @@ const navConfig = {
     { icon: FileText,        label: 'Transcripts', path: '/admin/transcripts' },
     { icon: Settings,        label: 'Settings',    path: '/admin/settings' },
   ],
-  Lecturer: [
-    { icon: LayoutDashboard, label: 'Dashboard',     path: '/lecturer' },
-    { icon: UploadCloud,     label: 'Upload Grades', path: '/lecturer/grades' },
-    { icon: BookOpen,        label: 'My Courses',    path: '/lecturer/courses' },
-  ],
   Student: [
     { icon: LayoutDashboard, label: 'My Results',  path: '/student' },
     { icon: FileText,        label: 'Course Registration', path: '/student/register' },
@@ -27,7 +22,6 @@ const navConfig = {
 
 const roleColors = {
   Admin:    { bg: 'rgba(99,102,241,0.15)',  text: '#a5b4fc' },
-  Lecturer: { bg: 'rgba(16,185,129,0.15)', text: '#6ee7b7' },
   Student:  { bg: 'rgba(245,158,11,0.15)', text: '#fcd34d' },
 };
 

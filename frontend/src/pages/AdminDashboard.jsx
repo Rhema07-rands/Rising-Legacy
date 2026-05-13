@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import StatCard from '../components/StatCard';
 import { Users, BookOpen, GraduationCap, TrendingUp, Search, Bell, FileText, Settings } from 'lucide-react';
@@ -121,9 +121,9 @@ const AdminDashboard = () => {
                 <tr key={i}>
                   <td style={{ color: 'var(--text-secondary)', fontFamily: 'monospace', fontSize: '0.85rem' }}>{row.student_id}</td>
                   <td style={{ fontWeight: '600' }}>{row.full_name}</td>
-                  <td>{row.level}L</td>
+                  <td>{row.level || 100}L</td>
                   <td style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{row.department}</td>
-                  <td style={{ fontWeight: '700', color: 'var(--accent-primary)' }}>{row.cgpa.toFixed(2)}</td>
+                  <td style={{ fontWeight: '700', color: 'var(--accent-primary)' }}>{(row.cgpa || 0).toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>

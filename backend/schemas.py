@@ -5,7 +5,6 @@ from datetime import date
 
 class RoleEnum(str, Enum):
     admin = "Admin"
-    lecturer = "Lecturer"
     student = "Student"
 
 class UserBase(BaseModel):

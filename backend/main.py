@@ -250,7 +250,7 @@ def register_courses(student_id: int, request: schemas.CourseRegistrationRequest
         if code not in requested_codes:
             # Check if graded
             if grade.grade_letter != '–' or grade.score > 0:
-                raise HTTPException(status_code=400, detail=f"Cannot deregister {code}. Please ask for lecturer approval.")
+                raise HTTPException(status_code=400, detail=f"Cannot deregister {code}. Please ask for admin approval.")
             courses_to_remove.append(grade)
             
     # Remove courses
