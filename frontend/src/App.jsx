@@ -8,15 +8,13 @@ import './index.css';
 function App() {
   return (
     <Router>
-      <div className="app-container">
-        <Routes>
-          <Route path="/" element={<Navigate to="/auth" replace />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/transcript" element={<Transcript />} />
-          <Route path="/admin" element={<Admin />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<Navigate to="/auth" replace />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/transcript" element={<Transcript />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
     </Router>
   );
 }
