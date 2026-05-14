@@ -145,6 +145,37 @@ def get_transcript(user_id: int, db: Session = Depends(get_db)):
         "degree_classification": degree_class
     }
 
+@app.get("/admin/stats")
+def get_admin_stats(db: Session = Depends(get_db)):
+    total_students = db.query(models.User).filter(models.User.role == "Student").count()
+    records = db.query(models.CourseRecord).all()
+    all_grades = [{'gp': r.grade_point, 'credit_units': r.credit_units} for r in records]
+    avg_cgpa = calculate_cgpa(all_grades)
+    
+    return {
+        "total_students": total_students,
+        "avg_cgpa": avg_cgpa,
+        "active_courses": 12, # Static for CS dept
+        "transcripts_generated": total_students # Placeholder
+    }
+
+@app.post("/admin/enroll-student", status_code=status.HTTP_201_CREATED)
+def enroll_student(request: schemas.UserCreate, db: Session = Depends(get_db)):
+    if db.query(models.User).filter(models.User.username == request.username).first():
+        raise HTTPException(status_code=400, detail="Username/Matric No already registered")
+    
+    new_user = models.User(
+        username=request.username,
+        password_hash=request.password or "password123",
+        role="Student",
+        full_name=request.full_name,
+        level=request.level
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
+
 @app.get("/admin/students", response_model=List[schemas.AdminStudentView])
 def get_all_students(db: Session = Depends(get_db)):
     students = db.query(models.User).filter(models.User.role == "Student").all()

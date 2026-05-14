@@ -43,22 +43,17 @@ export default function Dashboard() {
     fetchExistingGrades(u.id);
   }, [navigate]);
 
-  const [semesterGpas, setSemesterGpas] = useState({});
-
   const fetchExistingGrades = async (userId) => {
     try {
       const res = await fetch(`${API_BASE}/transcript/${userId}`);
       if (res.ok) {
         const data = await res.json();
         const initialGrades = {};
-        const gpas = {};
         let totalC = 0;
         let totalU = 0;
         
         data.levels.forEach(l => {
-          if (!gpas[l.level]) gpas[l.level] = {};
           l.semesters.forEach(s => {
-            gpas[l.level][s.semester] = s.gpa;
             s.courses.forEach(c => {
               initialGrades[c.course_code] = c.grade;
               totalC += 1;
@@ -68,7 +63,6 @@ export default function Dashboard() {
         });
         
         setGrades(initialGrades);
-        setSemesterGpas(gpas);
         setCurrentCgpa(data.total_cgpa);
         setDegreeClass(data.degree_classification || "N/A");
         setCoursesTaken(totalC);
@@ -77,6 +71,34 @@ export default function Dashboard() {
     } catch (err) {
       console.error("Failed to load existing grades", err);
     }
+  };
+
+  const getPoints = (grade) => {
+    const map = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'F': 0 };
+    return map[grade] !== undefined ? map[grade] : null;
+  };
+
+  const calculateGpa = (level, semester) => {
+    let tqp = 0;
+    let tcu = 0;
+    let courses = [];
+    
+    if (semester === 'All') {
+      courses = [...(curriculum[level]?.['First'] || []), ...(curriculum[level]?.['Second'] || [])];
+    } else {
+      courses = curriculum[level]?.[semester] || [];
+    }
+
+    courses.forEach(c => {
+      const g = grades[c.code];
+      const pts = getPoints(g);
+      if (pts !== null) {
+        tqp += pts * c.units;
+        tcu += c.units;
+      }
+    });
+
+    return tcu > 0 ? (tqp / tcu).toFixed(2) : "0.00";
   };
 
   const handleGradeChange = (code, val) => {
@@ -177,13 +199,8 @@ export default function Dashboard() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }}>
             {['First', 'Second'].map(sem => (
               <div key={sem}>
-                <h3 style={{ color: 'var(--accent-primary)', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '10px', marginBottom: '15px', fontSize: '1.1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span>{sem} Semester</span>
-                  {semesterGpas[activeLevel] && semesterGpas[activeLevel][sem] !== undefined && (
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 'normal', background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '4px' }}>
-                      GPA: <strong style={{ color: 'var(--text-primary)' }}>{semesterGpas[activeLevel][sem].toFixed(2)}</strong>
-                    </span>
-                  )}
+                <h3 style={{ color: 'var(--accent-primary)', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '10px', marginBottom: '15px', fontSize: '1.1rem' }}>
+                  {sem} Semester
                 </h3>
                 
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -229,13 +246,33 @@ export default function Dashboard() {
             ))}
           </div>
 
-          <div style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-              Only courses with selected grades will be saved to your record.
-            </p>
-            <button className="btn btn-primary" onClick={handleSave} disabled={loading} style={{ padding: '10px 24px' }}>
-              {loading ? 'Saving...' : 'Save Grades'}
-            </button>
+          {/* GPA Summary Bar */}
+          <div style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px',
+            marginTop: '30px', padding: '20px', background: 'rgba(0,0,0,0.2)',
+            borderRadius: '12px', border: '1px solid var(--border-color)'
+          }}>
+            <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap' }}>
+              <div>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', display: 'block', marginBottom: '4px', letterSpacing: '0.05em' }}>1st Semester GPA</span>
+                <span style={{ fontSize: '1.4rem', fontWeight: '700', color: 'var(--text-primary)' }}>{calculateGpa(activeLevel, 'First')}</span>
+              </div>
+              <div>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', display: 'block', marginBottom: '4px', letterSpacing: '0.05em' }}>2nd Semester GPA</span>
+                <span style={{ fontSize: '1.4rem', fontWeight: '700', color: 'var(--text-primary)' }}>{calculateGpa(activeLevel, 'Second')}</span>
+              </div>
+              <div style={{ paddingLeft: '20px', borderLeft: '1px solid var(--border-color)' }}>
+                <span style={{ fontSize: '0.8rem', color: 'var(--accent-primary)', textTransform: 'uppercase', display: 'block', marginBottom: '4px', letterSpacing: '0.05em', fontWeight: '600' }}>{activeLevel}L Total GPA</span>
+                <span style={{ fontSize: '1.4rem', fontWeight: '700', color: 'var(--accent-primary)' }}>{calculateGpa(activeLevel, 'All')}</span>
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+              <button className="btn btn-primary" onClick={handleSave} disabled={loading} style={{ padding: '12px 32px' }}>
+                {loading ? 'Saving...' : 'Save Grades'}
+              </button>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Grades must be saved to update overall CGPA</span>
+            </div>
           </div>
           
         </div>

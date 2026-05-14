@@ -1,0 +1,956 @@
+A MOBILE APPLICATION BASED DOCTOR-PATIENT CONSULTATION SYSTEM
+
+
+
+
+
+BY
+
+
+
+
+
+DEREK-AYEMERE RHEMA OSEGODUWA
+SCN/CSC/220880
+
+
+
+
+
+DEPARTMENT OF COMPUTER SCIENCE,
+FACULTY OF COMPUTING,
+BENSON IDAHOSA UNIVERSITY,
+BENIN CITY, EDO STATE
+
+
+
+
+
+
+
+APRIL, 2026
+
+
+A MOBILE APPLICATION BASED DOCTOR-PATIENT CONSULTATION SYSTEM
+
+
+
+
+
+BY
+
+
+
+
+
+DEREK-AYEMERE RHEMA OSEGODUWA
+SCN/CSC/220880
+
+
+
+
+A PROJECT WORK
+PRESENTED TO THE DEPARTMENT OF COMPUTER SCIENCE,  FACULTY OF COMPUTING, IN PARTIAL FULFILMENT OF THE REQUIREMENTS FOR THE AWARD OF BACHELOR DEGREE OF SCIENCE (B.Sc.) IN COMPUTER SCIENCE OF BENSON IDAHOSA UNIVERSITY, BENIN CITY, EDO STATE, NIGERIA
+
+
+
+
+
+
+
+APRIL, 2026
+
+
+DECLARATION
+
+I, Derek-Ayemere Rhema Osegoduwa, hereby declare that this project work was carried out by me under the supervision of Mr. Melvin Omoraro, in the Department of Computer Science, Benson Idahosa University, Benin City, in partial fulfilment of the requirements for the award of the Bachelor of Science (B.Sc.) degree as prescribed by the University.
+
+ _______________________________                        ____________________________          
+DEREK-AYEMERE RHEMA OSEGODUWA                                  DATE
+   (STUDENT)    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CERTIFICATION
+
+This is to certify that DEREK-AYEMERE RHEMA OSEGODUWA matriculation number SCN/CSC/220880 carried out this project work . In partial fulfilment of the award of  Bachelor Degree (BSC) in computer science, BENSON IDAHOSA UNIVERSITY undersigned by the following people:
+
+       _______________________________                      _________________________          
+DEREK-AYEMERE RHEMA OSEGODUWA                               DATE
+ (STUDENT)          	                                               
+
+
+_______________________________                        ________________________
+MR. MELVIN OMORARO                                                               DATE
+(PROJECT  SUPERVISOR)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DEDICATION
+
+This work is dedicated to Almighty God, whose infinite wisdom and grace has been my constant guide throughout this journey. His love, protection and blessings is the only reason for the completion of this project  possible. To God be all the glory.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ACKNOWLEDGMENTS
+
+I wish to express my profound gratitude to the Almighty GOD for bestowing upon me the gift of life, wisdom, and grace, which enabled me to successfully complete this seminar report
+I am deeply grateful to my supervisor, Mr. Melvin Omoraro for his leadership and guidance.
+I extended my sincere appreciation to the Head of Department, Dr Sunday Agu and my dedicated lecturers Prof K.O Obahiagbon, Mrs Iriagbonse A. Inyang, Mrs. Cynthia Orie, and Mr. Oyeyemi, for their invaluable contributions to my academic development
+My heartfelt thanks goes to my father Mr Mukoro and my siblings for their unwavering love, care and support throughout this journey.
+I also sincerely appreciate Alvin Ogboru, for his assistance with the design and drafting of this project. I further extend my gratitude to my friends and colleagues who contributed their time, support, and effort towards the development of this work, especially in testing and improving the project.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ABSTRACT
+The combination of overcrowded healthcare facilities and the high infrastructure costs associated with enterprise telehealth systems creates significant barriers for outpatients seeking preliminary medical triage in developing regions such as Benin City, Edo State. Existing literature highlights a critical deficiency: while digital health solutions continue to expand, there remains a severe lack of secure, lightweight mobile platforms explicitly optimized for low-bandwidth networks. Consequently, patients and practitioners frequently resort to unsecure consumer messaging applications or general web-based platforms that lack strict health data compliance and structured medical record-keeping. To bridge this clinical and technological gap, this study details the development of the Doctor Chat App, a secure, text-first mobile consultation system designed to facilitate safe, real-time medical diagnoses.
+The project utilized the Agile Software Development Life Cycle (SDLC) to engineer a cross-platform solution using React Native and TypeScript, supported by a highly robust C# ASP.NET Core backend. Real-time communication was achieved using Microsoft SignalR for low-latency text messaging, alongside WebRTC and Metered STUN/TURN relays to ensure uninterrupted video escalation across restrictive mobile carrier firewalls. Data integrity and privacy were guaranteed through JSON Web Tokens (JWT) for Role-Based Access Control (RBAC), an ACID-compliant distributed MySQL and TiDB database architecture, and Cloudinary APIs for strict manual medical license verification. Furthermore, deployment optimization utilizing Android App Bundles (.aab) successfully reduced the application's storage footprint by over 70% from its initial 144MB testing size, ensuring high accessibility for rural mobile devices with limited capacity. Ultimately, the Doctor Chat App delivers a highly scalable, legally compliant blueprint for digital triage that successfully decongests physical hospitals and democratizes verified healthcare access. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TABLE OF CONTENTS
+
+Title Page	i
+Declaration	ii
+Certification	iii
+Dedication	iv
+Acknowledgements	v
+Abstract	vi
+Table of Contents	vii
+List of Figs	viii
+List of Tables	ix
+
+CHAPTER ONE: INTRODUCTION	1
+1.1    Background to the Study	1
+1.2    Statement of the Problem	4
+1.3    Objectives of the Study	6
+1.4    Scope of the Study	7
+1.5    Significance of the Study	8
+1.6    Limitations of the Study	9
+1.7    Definition of Terms	10
+
+CHAPTER TWO: LITERATURE REVIEW	12
+2.1    Introduction	12
+2.2    Related Works	13	
+2.3    Summary of Related Works	23
+2.4    Research Gap	25
+
+CHAPTER THREE: METHODOLOGY	27
+3.1    Adopted Methodology	27
+3.2    Analysis of the Existing System	29
+3.2.1  Limitations or Drawbacks of the Existing System	31
+3.3    Analysis of the Proposed System	32
+3.3.1  Preliminary Design	33
+3.3.2  Proposed System Justification	35
+3.3.3  Benefits of the Proposed System	36
+3.4    System Design	37
+3.4.1  Use Case	37
+3.4.2  Entity Relationship	38
+3.5    Database Design	39
+3.6    Input/Output Specification	41
+3.7    Cost Analysis	43
+
+CHAPTER FOUR: IMPLEMENTATION AND DISCUSSION	45
+4.1    Programming Language of Implementation	45
+4.1.1  Justification of Programming Languages Used	46
+4.2    System Requirements	48
+4.2.1  Hardware Requirements	48
+4.2.2  Software Requirements	49
+4.3    Implementation Guidelines	55
+4.4    Results and Discussion	56
+
+CHAPTER FIVE: SUMMARY, CONCLUSION AND RECOMMENDATIONS	60
+5.1    Summary of Major Findings	60
+5.2    Conclusion	62
+5.3    Recommendations	65
+
+REFERENCES	67
+APPENDIX A: SOURCE CODE	74
+APPENDIX B: SAMPLE OUTPUT	76
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LIST OF FigS
+
+Fig	Page
+
+Fig 3.1    Process flow of the existing system (Swapp, swapp.fashion)	30
+Fig 3.2    High-level architectural overview of the proposed system	34
+Fig 3.3    Use Case Diagram of the proposed system	37
+Fig 3.4    Entity Relationship Diagram of the proposed system	38
+Fig 4.1    Clothing upload form of the proposed system	52
+Fig 4.2    Feed screen of the proposed system	53
+Fig 4.3    Conversation list and active chat screens of the proposed system	54
+Fig 4.4    Search and filter interface of the proposed system	55
+
+LIST OF TABLES
+
+Table	Page
+
+Table 2.1    Summary of related works	23
+Table 3.1    Feature comparison between Swapp and the proposed system	35
+Table 3.2    Proposed system database schema summary	39
+Table 3.3    Input/output specification	41
+Table 3.4    Cost analysis of development and deployment	43
+Table 4.1    Hardware requirements for the proposed system	48
+Table 4.2    Software requirements for the proposed system	49
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CHAPTER ONE
+INTRODUCTION
+1.1 Background to the Study
+The healthcare system has depended on direct physical contact between doctors and patients since its inception to provide services through hospital and clinic settings. The implementation of Information and Communication Technology (ICT) across all countries created permanent transformations which changed fundamental aspects of healthcare system operations. Telemedicine functions as the primary disruptive technology which medical professionals use to deliver remote patient care through advanced digital communication systems (Haleem et al., 2021). The telemedicine system provides multiple healthcare services through its extensive service model that includes virtual high-definition video consultations and mobile health (mHealth) applications and electronic medical record (EMR) management and artificial intelligence-driven symptom checkers and remote patient monitoring systems which use IoT devices. The World Health Organization (2021) identifies these technological developments as essential elements which governments and private health sectors must implement to achieve universal health coverage rather than as convenient enhancements. Digital health solutions provide equal health service access which enables patients to travel less while spending less money and improves their health knowledge and involvement at the global level.
+The telemedicine industry has experienced exceptional expansion during the past five years which resulted in considerable financial evaluations and the industry will continue to grow at a rate exceeding ten percent each year for the next decade. The healthcare industry expands rapidly because three main factors interact with each other: healthcare facilities are implementing digital systems to replace their traditional record-keeping methods while people require remote medical care that became vital during worldwide health crises and people worldwide are adopting virtual care methods which enable them to receive medical treatment from home (Omboni et al., 2022). The global smartphone market expansion has created digital access to telemedicine services because users can now access mobile health services which operate as the primary telemedicine solution. Mobile smartphones have enabled millions of users to access daily internet services because they function as the only internet solution for areas that lack traditional broadband and desktop computer access.
+The global mHealth applications market reached an estimated USD 40.65 billion because people gained access to high-speed mobile internet through 3G and 4G and new 5G networks and they showed strong interest in using digital health solutions while they traveled (Grand View Research, 2022). The COVID-19 pandemic created an unstoppable force that pushed this movement forward with great force. The healthcare system needed to rapidly implement remote health monitoring and digital communication methods because hospitals were at risk of overflowing their capacity (Shaver, 2022). The digital world that exists after the pandemic requires mobile application solutions which can handle operational problems that occur throughout the globe.
+The healthcare system in developing nations faces a crisis because of the extreme deficiency of medical workers which results in an unbalanced doctor-to-patient ratio. Public hospitals experience constant overcrowding because patients from rural areas must travel to urban centers where they will wait for hours in packed waiting rooms to receive brief first-time medical check-ups. The system functions in an inefficient manner because it causes testing delays which lead to increased mortality from treatable conditions and it creates hazardous situations because people rely on unproven home remedies. The Doctor Chat App will serve as a communication solution that enables users to connect through multiple mobile devices which function as its primary platform. The system uses modern software engineering frameworks which include React Native with TypeScript for its mobile frontend and ASP.NET Core C# with SignalR for its secure and simultaneous real-time backend to create a dedicated platform that enables patients and doctors to perform secure instant text consultations.
+1.2 Statement of the Problem
+The worldwide growth of healthcare technology faces serious challenges because patients cannot communicate with doctors who work outside of their hospital duties which results in extended wait times and delayed appointments and creates financial difficulties for patients who need basic medical assistance. The existing digital health solutions on the market face two major issues because enterprise telehealth platforms require high-cost subscriptions and their user interfaces remain difficult to operate and their systems depend on high-definition video streaming which developing regions cannot access due to their unreliable low-bandwidth mobile networks. Medical professionals and patients rely on standard social messaging applications such as WhatsApp and Telegram to conduct their medical conversations. The use of these common platforms for medical communication between the two parties creates serious risks which stem from their failure to meet health data regulations and their lack of structured medical documentation and their inability to provide Role-Based Access Control (RBAC) which protects clinical interactions through controlled access. The fundamental problem requires a dependable medical text consultation system which functions effectively on low-bandwidth networks. The Doctor Chat App will function as a complete software engineering solution that will enable medical professionals to conduct direct patient contact through its lightweight, encrypted system, which only authorized medical staff will use for secure patient evaluations and medical assessments.
+1.3 Aim and Objectives of the study
+The aim of this study is to develop a mobile application based Doctor-Patient Consultation System (Doctor Chat App) which enables doctors and patients to interact through secure text messaging and video/audio calling features. The specific objectives of this study are to:
+To design an intuitive mobile interface for seamless doctor-patient interaction.
+To implement a secure backend and real-time messaging framework and role-based access control (RBAC) to facilitate reliable authorized consultations.
+To evaluate the usability, performance, and security of the developed system through software testing procedures to ensure that patient information remain protected.
+1.4 Scope of the study
+The research focuses on creating and testing a Doctor Chat App that operates on mobile devices. The research takes place exclusively within Benin City, located in Edo State, Nigeria. The study focuses on licensed medical practitioners and general outpatients who need initial medical consultations in this area. The assessment process involves a representative sample of participants, comprising both medical doctors and patients, to evaluate the proposed system's usability and security features.
+The project implements secure user registration together with a role-based access control (RBAC) system, profile management, real-time text-based chat functions, and WebRTC-enabled video consultations for escalated medical triage. The study strictly limits its coverage to preliminary remote triage and explicitly excludes physical diagnoses, emergency ambulance dispatch systems, and integration with legacy national electronic health record (EHR) systems.
+1.5 Significance of the study
+Research projects exist to solve specific problems while their findings bring progress to a particular academic discipline. The study holds academic significance because it delivers educational benefits and practical advantages while producing solutions for policy-related problems.
+Academic Contribution: The research demonstrates its contribution to computer science and software engineering and health informatics through its development of a mobile-based doctor-patient consultation system. The research establishes a practical method for hospitals to implement real-time communication systems which perform efficiently in areas with minimal technological capabilities. The study provides a reference material which future researchers can use to study mobile health (mHealth) systems and real-time messaging systems.
+Practical Contribution: The proposed system allows patients to receive their first medical consultation through an online platform without visiting a hospital. The system helps users save money on transportation expenses and cuts down their waiting time while they try to reach medical facilities. The system enables medical professionals to use a virtual system which helps them schedule patient meetings through different channels while keeping their work-related messages apart from their regular chats.
+Policy and Institutional Contribution: The study results help healthcare organizations and policymakers evaluate mobile consultation systems as practical solutions for enhancing healthcare access. The systems enable digital consultations which help decrease traffic at medical facilities while improving the effectiveness of healthcare operations.
+1.6 Limitations of the study
+This study is subject to several limitations that may affect the generalizability and scope of its findings:
+
+Regional Variance: The system is evaluated in a localized pilot setting. Results may not fully apply across all Nigerian healthcare facilities due to differences in infrastructure and digital literacy.
+Technical Dependencies: The platform requires smartphones and stable internet. Despite low-bandwidth optimizations, poor connectivity in remote areas may disrupt real-time messaging.
+Diagnostic Constraints: Remote communication lacks physical examination capabilities. Medical practitioners must rely entirely on the accuracy of self-reported patient symptoms for preliminary triage.
+Evaluation Timeframe: The research is limited by a short academic timeframe. This restricts the long-term assessment of system performance, user adoption, and sustained clinical impact.
+1.7 Definition of terms
+Telemedicine: The delivery of healthcare services and medical consultation through telecommunications technologies that allow patients and healthcare professionals to communicate remotely.
+mHealth (Mobile Health): A subset of telemedicine that involves the use of mobile devices such as smartphones and tablets to provide healthcare services and health-related information.
+RBAC (Role-Based Access Control): A security model that restricts system access based on the role assigned to a user, such as doctor or patient.
+Triage: The process of assessing patients to determine the urgency and priority of their medical needs.
+Synchronous Communication: Real-time, continuous communication where both the sender and receiver interact simultaneously, such as the proposed live text chat consultation.
+End-to-End Encryption (E2EE): A cryptographic security method designed to be implemented to prevent third parties from accessing or reading medical data while it is transferred between endpoints.
+Cross-Platform: A software development approach that will allow the proposed application to operate effectively on varying operating systems, such as Android and iOS, without needing separate native codebases.
+WebSockets: A real-time communication protocol intended to be utilized to enable the backend server to push instant messages to connected mobile clients without latency.
+WebRTC (Web Real-Time Communication): An open-source framework and API standard that enables mobile applications to establish direct, peer-to-peer audio and video calls.
+STUN/TURN Servers: Network protocols utilized during WebRTC calls to bypass restrictive mobile carrier firewalls and Network Address Translation (NAT) barriers, ensuring the video stream does not disconnect.
+SignalR: A software library utilized within the C# .NET ecosystem that simplifies the management of real-time WebSocket connections, enabling the server to push instant notifications and chat messages to the app.
+JWT (JSON Web Token): A cryptographically secure, compact token used by the backend system to verify the identity and role of a user each time they attempt to access protected medical data.
+EF Core (Entity Framework Core): An Object-Relational Mapper (ORM) that enables the C# backend to interact seamlessly with the relational SQL databases without writing raw SQL queries.
+Cloudinary: A secure, cloud-based content delivery network (CDN) and media management platform used to optimize and store sensitive consultation images and doctor verification credentials.
+ACID Compliance: A set of database properties (Atomicity, Consistency, Isolation, Durability) that guarantee the validity and integrity of medical records and chat logs, even in the event of a system failure.
+Agile SDLC (Software Development Life Cycle): An iterative software development methodology utilized in this project that enables continuous adaptation, testing, and feedback during the creation of the application. 
+System Usability Scale (SUS): A standardized, reliable digital questionnaire used in this study to empirically measure the usability, complexity, and overall user satisfaction of the developed software. 
+React Native: An open-source UI software framework used to engineer the frontend of the application, allowing a single codebase to seamlessly compile into native applications for both Android and iOS devices. 
+Android App Bundle (.aab): A modern Android publishing format utilized during deployment that drastically reduces the final application size by delivering only the specific code and resources needed for a user's exact device. 
+TiDB: An advanced, distributed SQL database engine integrated into the backend to guarantee ACID compliance and horizontal scalability for securely handling high volumes of medical records and chat logs. 
+Health Data Regulations (NDPR, GDPR, HIPAA): Strict regional and global legal frameworks (such as the Nigerian Data Protection Regulation) that govern the secure handling, transmission, and privacy of patient medical data. 
+UML (Unified Modeling Language): A standardized visual modeling language used in system design to specify, visualize, construct, and document the architectural workflows of the software system.
+BCrypt: A robust cryptographic hashing algorithm implemented within the C# backend to permanently encrypt and store user passwords securely in the database. 
+App-Lock: A localized, secondary security mechanism engineered into the mobile application that requires a user to enter a specific PIN to resume active chat sessions, protecting medical logs from unauthorized physical access on shared devices.
+Metered Network/Relays: A cloud-based network infrastructure integrated to provide the necessary STUN and TURN server relays, ensuring video calls do not drop when users switch between Wi-Fi and restrictive mobile carrier networks.
+
+CHAPTER TWO
+LITERATURE REVIEW
+2.1 Introduction
+The evolution of healthcare delivery has increasingly relied on digital interventions to bridge the gap between medical practitioners and outpatients. This shift has become particularly critical in developing regions, where physical hospital infrastructure is frequently overburdened by non-emergency cases. To fully understand this transition, this chapter presents a comprehensive and critical review of existing literature concerning the architecture, deployment, and utilization of mobile-based telemedicine systems (Bokolo, 2021; Kruse et al., 2017). Establishing a robust theoretical and technical foundation is essential for modern software design, as it ensures that newly engineered solutions are grounded in proven clinical realities rather than just theoretical programming concepts.
+To engineer a highly resilient medical application, it is imperative to deeply analyze current market conditions, user adoption behaviors, and the continuous evolution of health informatics (Alwashmi, 2020). Consequently, this review systematically examines prior research across three core thematic domains. First, it explores global telemedicine adoption to understand the systemic economic and infrastructural barriers that hinder accessibility in low-resource environments. Second, it investigates real-time, cross-platform communication frameworks, heavily focusing on the necessity for low-bandwidth optimization in rural areas (Garfan et al., 2021). Finally, it evaluates clinical privacy protection systems, examining the critical need for strict data encryption and professional access control in modern medical applications.
+By synthesizing these specific thematic areas, this literature review exposes the technological vulnerabilities, high-bandwidth dependencies, and severe security deficits inherent in many current commercial messaging platforms and enterprise telehealth systems (Jalali et al., 2021; Ting et al., 2020). Ultimately, this comprehensive analysis defines the precise research gap that necessitates the development of the secure, low-bandwidth Doctor Chat App, laying the theoretical groundwork for the software architecture and methodology detailed in subsequent chapters.
+2.2 Related Works
+This entails previous empirical studies, projects, or applications closely connected to the current research. A minimum of 50 verifiable, peer-reviewed literatures and empirical studies published over the past decade have been extensively consulted and synthesized to establish the robust foundation of this software engineering study.
+2.2.1 Global Telemedicine Evolution and Public Health Crises
+Scientists have examined two distinct research areas which include worldwide telemedicine expansion and the connection between health emergencies and mobile technology adoption. The researchers conducted a thorough study which examined telemedicine systems from various countries and found that telemedicine systems exist in multiple locations but their usage is restricted because people need to pay expensive subscription fees and face difficulties when trying to use complex system interfaces. The research conducted by Omboni et al. (2022) proved that universal accessibility of digital triage systems leads to hospital overcrowding decrease and hospital-acquired infection reduction. The research conducted by Gajarawala and Pelkowski (2021) shows that telehealth systems enable medical professionals to work more efficiently while their expensive infrastructure costs create financial problems for medically uninsured patients. Shaver (2022) studied telehealth development through policy analysis showing that remote health monitoring now functions as a basic component of primary medical services. The research conducted by Bokolo (2021) examined how healthcare providers use digital software for virtual outpatient treatment which proved that digital-first healthcare delivery is essential to maintain functional outpatient services. The researchers conducted their research to study rural telehealth disparities which showed that rural areas need low-bandwidth text options because high-definition video conferencing systems fail due to packet loss.
+The World Health Organization (2021) published a global digital strategy report that acts as a mandate, explicitly calling for the development of agile, user-centric mHealth tools to achieve universal health coverage goals. Grand View Research (2022) provided an extensive quantitative analysis predicting exceptional financial growth for the chat-based medical tracking industry. Bassi et al. (2021) conducted a review of mobile applications used in India, demonstrating that international growth in developing nations requires developers to make their applications available on both Android and iOS platforms.
+2.2.2 Telehealth Efficacy and Behavioral Adoption
+The existence of fundamental studies establishes a permanent transformation which alters patient expectations about how healthcare services will be provided. Monaghesh and Hajizadeh (2020) demonstrated through meta-analysis that telehealth services effectively diminished the transmission of viral diseases during lockdown periods. Wosik et al. (2020) demonstrated that hospital IT departments managed their digital traffic through rapid transformations of virtual care ecosystems. Keesara et al. (2020) presented a strong case that telehealth should become a standard requirement for hospital patient triage processes instead of temporary emergency solutions. Smith et al. (2020) demonstrated how telehealth services operate during global health crises by explaining their role in protecting physical personal protective equipment (PPE) resources. Portnoy et al. (2020) examined how telemedicine connects with clinical operations, showing that doctors can manage three times more basic initial consultations through digital platforms. Bashshur et al. (2020) demonstrated that continuous digital connections between patients and doctors lead to better results in chronic disease management.
+Hollander and Carr (2020) established a theoretical framework for virtual care which redefines the traditional hospital entry point to reach patients through their mobile devices. The research conducted by Mann et al. (2020) established strong evidence which showed how digital platforms changed the patient routing procedures used by major US health systems. The study conducted by Anthony Jnr (2020) showed that telemedicine allows clinics to reduce their administrative work because digital logs handle all documentation tasks automatically. The study conducted by Vidal-Alaball et al. (2020) measured patient satisfaction to prove that telehealth services achieved very high user approval during their fast text evaluation process.
+2.2.3 Systemic Barriers and Physician Attitudes
+Scott Kruse and his team studied telemedicine adoption problems through their research which identified specific implementation barriers. The systematic review showed that three main factors lead to medical applications failing in developing areas which include technological limitations and absence of IT infrastructure and data security issues. The research study conducted by Kruse and his team in 2017 found that patients prefer telemedicine because they can use it without needing advanced digital skills. The rapid systematic review by Bitar and Alismail in 2021 investigated eHealth and telehealth, which revealed that patients with chronic diseases require reliable chat systems for ongoing digital communication during their medical follow-ups.
+Alwashmi (2020) proved that digital health services help detect diseases when he showed that mobile tools need to become part of primary care facilities which will function as early warning systems. The researchers Ohannessian, Duong, and Odone (2020) issued a call to action about global telemedicine implementation because they believed that emergency healthcare situations require development of independent telemedicine solutions which can operate at full capacity. The authors Bhaskar et al. (2020) established a worldwide position statement which declared telemedicine to be an essential element for maintaining health system resilience. The researchers Calton, Abedini, and Fratkin (2020) explained telemedicine applications for pain management according to their finding that patients who completed short digital check-ins received better results than those who attended rare in-person appointments. The researchers Breton et al. (2021) studied telehealth difficulties from primary healthcare physicians perspective and discovered that doctors stop using telehealth systems when interface design causes major delays in their operational tasks. Golinelli et al. (2020) studied early research studies about digital technology implementation which demonstrated the need for common software development standards. The researchers El-Rashidy et al. (2021) assessed mobile health technology for remote patient monitoring and they found that application developers need to decrease battery usage and application size to prevent patients from deleting their apps.
+2.2.4 Privacy, Security, and Mobile Architecture
+The development of a medical chat application needs research from the field of privacy, security, cryptography, and access control. Nittari et al. (2020) reviewed the ethical and legal challenges of telemedicine practice, emphasizing that developers must guarantee data confidentiality. Fagherazzi et al. (2020) recommended global digital health strategies, stressing that health applications must establish their core systems through interoperability and security features. Ting et al. (2020) investigated the relationship between digital technology and public health, while they reported the major danger that comes from transmitting unencrypted data. Mahmood et al. (2020) used digital health to support worldwide readiness, which required strict enforcement of patient identity verification. Sittig and Singh (2020) established the critical requirement for creating strong health information technology systems, which can provide secure support for decentralized mobile nodes.
+Martinez-Perez, de la Torre-Diez, and Lopez-Coronado (2015) conducted an early foundational review about security and privacy issues that affect mobile health applications. They found that most independent applications do not use backend encryption which creates security risks through their local storage methods. Kao and Liebovitz (2017) assessed consumer mHealth apps which showed high usage rates but patients stopped using these applications because they required too many unnecessary device permissions. Ming et al. (2020) studied mHealth applications which were developed during emergencies and discovered that fast development processes create substantial security weaknesses through their system design. Pérez-Sust et al. (2020) used virtual care to show how the Catalan health system responded to a healthcare challenge which demonstrated that safe state-sponsored systems build more patient trust than commercial consumer applications. Bhatia et al. (2021) conducted a repeated cross-sectional study on virtual care, demonstrating that patients now depend on secure digital portals for their healthcare needs. Irizarry, DeVito Dabbs, and Curran (2015) established through their state-of-the-science review that patient engagement heavily relies on the perceived security of the patient portal. Nittas et al. (2020) studied electronic patient-generated health data and found that secure transport layers are essential for protecting the accuracy of patient-reported symptoms. Tuckson, Edmunds, and Hodgkins (2017) created a telehealth clinical framework which showed that secure data transmission needed to be solved before telehealth could reach its full potential. Dorsey and Topol (2016) published an extensive study about telehealth which forecasted that real-time smartphone communication would become the main trend in the industry. Alhajri et al. (2021) examined physicians' telemedicine attitudes and found that doctors show strong intent to adopt digital tools which offer them legal protection through secure backend data encryption.
+Technical frameworks serve as essential components that determine telemedicine systems' operational success. Sun et al. (2021) emphasized that end-to-end encryption together with secure transport layers (TLS) must remain mandatory requirements for medical data transmission. The source code analysis of popular mHealth apps by Papageorgiou et al. (2018) discovered concerning methods which unauthorized third-party analytics trackers used to covertly gather user health information. Amin et al. (2021) introduced lightweight authentication protocols which enable token-based security systems to function on mobile devices that have restricted computational capabilities. Freeman (2022) demonstrated that ASP.NET Core can secure REST APIs through its routing system, which functions at enterprise-level protection standards. Giansanti (2021) examined telemedicine expansion through his research showing that cloud-based application programming interfaces represent essential tools for managing unexpected health emergency situations. Garfan et al. (2021) examined telehealth system designs which function under low-bandwidth conditions and determined that these systems must include network infrastructure-proficient design capabilities, which form the core foundation of the lightweight Doctor Chat App.
+2.2.5 The Identified Research Gap
+The reviewed literature reveals a significant research gap that this study seeks to address. While the clinical necessity, public health advantages, and user acceptance of telemedicine have been extensively demonstrated (Bokolo, 2021; Haleem et al., 2021; Shaver, 2022), the existing enterprise platforms that dominate the global market are predominantly architected around high-definition video transmission and complex insurance integrations. Consequently, these systems become largely inaccessible to users in developing regions and rural areas who rely on low-bandwidth mobile networks and cannot afford high enterprise costs (Gajarawala and Pelkowski, 2021; Hirko et al., 2021).
+Furthermore, independent security audits (Martinez-Perez et al., 2015; Papageorgiou et al., 2018; Primo Medical Services, 2020) reveal that many commercially available mHealth applications fail to adequately protect patient information, lacking the rigorous encryption and Role-Based Access Control (RBAC) mechanisms required for responsible medical procedures. Therefore, there is a critical need for a dedicated, highly secure, text-first medical consultation application built on modern software engineering frameworks. This study bridges this precise gap by engineering the Doctor Chat App, utilizing contemporary software ecosystems to provide an efficient, low-bandwidth, and professionally secure system for initial medical assessment.
+2.3 Summary of Related Works
+A summary of previous empirical studies, projects, or applications closely connected to the current research is presented in Table 2.1 below.
+Table 2.1: Summary of Related Works on Telemedicine and mHealth Architectures
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CHAPTER THREE
+METHODOLOGY
+3.1 Adopted Methodology
+This project adopts the Agile Software Development Life Cycle (SDLC) methodology. As recommended by Breton et al. (2021) and Andrews et al. (2020), Agile allows for iterative development, enabling the team to continuously adapt the software to changing requirements and ensure high usability through constant user feedback loops. The Agile model involves short, focused development sprints, which facilitated the continuous testing of the React Native frontend to ensure low-bandwidth accessibility (adopting principles from Garfan et al., 2021) and the C# ASP.NET backend to enforce strict authentication protocols (modifying methods suggested by Mahmood et al., 2020). This iterative methodology ensured the final application directly addressed the technical and clinical research needs identified in the literature.
+3.1.1 Requirements Analysis and Study Population 
+The core clinical and technical requirements of the proposed system were established by conducting a comprehensive analysis of the architectural flaws present in the existing baseline platform. Specifically, the critical need to eliminate the reliance on unsecure, third-party consumer messaging applications drove the requirement for a natively enclosed, proprietary communication environment. During this planning stage, technical prerequisites were strictly defined to include Role-Based Access Control (RBAC) for medical professionals, centralized data encryption, and a text-first interface specifically optimized for low-bandwidth network infrastructure.
+Alongside determining these software specifications, the research population was carefully defined to ensure the application would be evaluated against practical, real-world clinical constraints rather than controlled laboratory conditions. The target population comprised licensed medical practitioners and general outpatients residing within Benin City, Edo State, Nigeria. This specific demographic was selected because it represents a typical developing urban center with varying degrees of mobile network reliability and digital literacy. Establishing these exact geographical and demographic boundaries ensured that the subsequent data collection, usability testing, and system validation procedures directly reflected the target environment for which the Doctor Chat App was engineered.
+3.1.2 System Architecture and Design 
+Following the establishment of the core requirements, the conceptual needs of the application were translated into comprehensive technical blueprints. To accurately model the system's structural and behavioral logic, Unified Modeling Language (UML) diagrams, specifically Use Case, Activity, and Sequence diagrams, alongside Data Flow Diagrams (DFD) were generated. These models effectively mapped the distinct clinical workflows, authentication protocols, and data routing paths for all system actors. To ensure absolute data integrity and future scalability, the database schema was engineered to support an ACID-compliant distributed architecture utilizing MySQL and TiDB. This robust backend design was critical to guarantee the secure, centralized logging of Electronic Health Records (EHR), verified medical practitioner credentials, and encrypted real-time chat histories. Furthermore, configuring this centralized server architecture was strictly necessary not only for clinical privacy but also for the research methodology itself; the database and server logs would later serve as the primary source of automated technical data used to empirically evaluate system performance, bandwidth efficiency, and message delivery latency.
+3.1.3 Implementation and Development
+The construction of the Doctor Chat App was executed in iterative development sprints. The cross-platform frontend was developed using React Native and TypeScript to ensure low-bandwidth rural accessibility. The C# ASP.NET Core backend was integrated with Microsoft SignalR to facilitate low-latency text messaging. Crucially, to accommodate the project's scope for physical visual assessments, the WebRTC protocol was implemented for secure peer-to-peer audio and video streaming. Finally, the Cloudinary API was integrated to handle the secure upload of doctor verification documents.
+3.1.4 Testing, Sample Size, and Data Collection 
+System testing and beta deployment served as the primary data collection period for this study. Because the Doctor Chat App is a novel, custom-engineered platform, the study relied exclusively on primary data generated directly from user interactions during a closed beta-testing pilot in Benin City. No secondary datasets were imported.
+A purposive sampling technique was utilized to recruit a sample size of 4 “verified” medical professionals and 7 patients. Data was collected from this sample through two specific instruments:
+Human Usability Data: Following their interaction with the system, participants were administered a structured digital System Usability Scale (SUS) questionnaire. This utilized a 5-point Likert scale to gather quantitative data on interface simplicity, system reliability, and perceived security.
+Automated Technical Data: The system's C# backend and TiDB database automatically captured technical application logs. These logs recorded precise metrics such as real-time SignalR message delivery latency, WebRTC packet loss during video escalations, and the exact kilobyte size of transmitted media files.
+3.1.5 Data Analysis and Final Deployment 
+Prior to final deployment, the gathered data was systematically processed to validate the system's performance and usability. The quantitative data collected from the SUS questionnaires was coded and analyzed using Microsoft Excel. Descriptive statistics were employed to generate frequency counts, percentages, and mean scores, preparing the data for visual presentation (tables, pie charts, and bar graphs) in Chapter Four.
+Concurrently, the technical log data was analyzed to evaluate storage and bandwidth efficiency. Initial deployment tests utilizing standard direct .apk files resulted in a heavy storage footprint of 144MB. Driven by the data analysis regarding bandwidth constraints, the application was re-compiled utilizing the Android App Bundle (.aab) format. This optimization drastically reduced the final application size by over 70%, ensuring the software met the accessibility requirements of the rural patient population before its final release.
+3.2 Analysis of the Existing System
+The existing system evaluated as the baseline for this research is OgaDoc, a commercial web-based telemedicine platform proposed and deployed by Primo Medical Services (2024). Designed to mitigate healthcare accessibility barriers, OgaDoc functions primarily as a digital directory and virtual entrance for preliminary medical triage. However, a close examination of its software architecture reveals that it operates on a highly decentralized and fragmented communication model.
+When a patient accesses the OgaDoc web portal, they are presented with a directory of available medical practitioners. While the platform successfully aggregates these professionals into a centralized interface, it crucially lacks an enclosed, natively built communication infrastructure. Instead of facilitating secure, in-house messaging, the system operates merely as a routing intermediary. Upon a patient selecting a physician and initiating a consultation, the platform actively redirects the user away from its proprietary web environment. It forces the patient to transition to unauthorized, third-party consumer messaging applications, predominantly WhatsApp, to conduct the actual clinical exchange.
+In this architectural model, OgaDoc relies completely on external social software to handle the transmission of sensitive medical texts, symptom descriptions, and diagnostic media. The entire clinical workflow is outsourced to an application engineered for casual social interaction rather than structured health informatics. Consequently, the OgaDoc platform itself only handles the initial discovery and connection phase. It leaves the actual preliminary triage, medical record generation, and post-consultation follow-ups completely decentralized, unstructured, and unmonitored by the primary healthcare portal. This specific operational workflow establishes the baseline from which the architectural improvements of the proposed Doctor Chat App are derived. The Fig 3.1 below shows the Architectural Model of the OgaDoc system.
+Fig 3.1: Architectural Model of the Existing System (Primo Medical Services, 2020)
+3.2.1 Limitations or Drawbacks of the Existing System
+An analytical breakdown of the current system reveals several critical weaknesses that hinder effective healthcare delivery. These limitations, which form the identified research gap, include:
+Severe Privacy and Security Risks: As highlighted by Jalali et al. (2021) and Alam et al. (2020), commercial messaging apps like WhatsApp lack proper backend encryption tailored for Electronic Health Records (EHR) and often contain third-party trackers. By directing patients to WhatsApp, the existing platform fails to meet NDPR, GDPR, or HIPAA health data protection requirements.
+Absence of Centralized RBAC: Once the consultation moves to WhatsApp, there is no localized Role-Based Access Control (RBAC). The environment cannot natively distinguish between verified medical doctors and ordinary users, exposing patients to potential social engineering or medical fraud (Mahmood et al., 2020).
+Unstructured Data: Medical logs become lost and disjointed within informal WhatsApp chat threads. If a doctor or patient loses their device or clears their app data, the entire medical history is permanently destroyed.
+Professional Burnout: Doctors suffer from professional boundary issues and burnout due to the blurring of personal, family, and clinical communications, as all these interactions occur within the exact same consumer application.
+3.3 Analysis of the Proposed System
+The proposed system, the "Doctor Chat App," is a secure, cross-platform mobile software application engineered to facilitate decentralized, remote medical consultations. Designed to directly resolve the severe architectural and clinical limitations of existing baseline models like OgaDoc, this system provides a self-contained, highly optimized alternative. Instead of operating as a mere web directory that outsources clinical triage to unsecure third-party messaging applications like WhatsApp, the Doctor Chat App encapsulates the entire consultation lifecycle within a proprietary, natively built digital environment.
+At its technical core, the system utilizes React Native to deliver a lightweight, user-friendly interface specifically optimized for the low-bandwidth mobile networks prevalent within the target demographic of Benin City. The communication infrastructure abandons traditional static routing in favor of Microsoft SignalR (WebSockets) to facilitate instantaneous, text-first synchronous messaging. Furthermore, recognizing that certain preliminary diagnoses require physical visual assessment, the system integrates Web Real-Time Communication (WebRTC). This allows consultations to seamlessly escalate into secure peer-to-peer audio and video streams without requiring the user to leave the application boundary.
+Guaranteeing the integrity of patient data and complying with strict health privacy regulations required anchoring the application with a robust C# ASP.NET Core backend. This backend enforces strict Role-Based Access Control (RBAC), cryptographically verifying and separating users based on their defined roles (Doctors and Patients) before granting communication access. All consultation chat histories, digital prescriptions, and verified professional credentials are automatically logged and centralized within an ACID-compliant distributed database architecture utilizing TiDB.
+By integrating this dynamic real-time messaging architecture with a verified professional environment, the Doctor Chat App effectively democratizes healthcare access. It successfully transfers the point of preliminary care from overcrowded physical hospital waiting rooms directly to the patient's smartphone, ensuring that remote medical advice is accessible, professionally bounded, and permanently secure.
+3.3.1 Preliminary Design
+The preliminary design of the Doctor Chat App employs a standard 4-Tier Client-Server architectural model. This architecture is divided into four distinct layers to ensure separation of concerns, high scalability, and strict security:
+The Presentation Layer (Client Frontend): Developed using React Native and TypeScript to support both Android and iOS devices from a single, strongly-typed codebase. It features two distinct User Interfaces: one tailored for patients to search for doctors and request consultations, and a comprehensive dashboard for doctors to manage incoming requests and patient queues.
+The Application Logic Layer (Backend Server): Engineered using C# (typically ASP.NET Core), hosted on the Render cloud platform. This tier handles all the business logic, user authentication (JWT tokens), Role-Based Access Control (RBAC) enforcement, real-time message routing via WebSockets (SignalR), and API endpoints.
+The Data and Media Layer (Database and Storage): A highly scalable relational database architecture utilizing MySQL and TiDB (a distributed SQL database) for robust ACID-compliant storage of user credentials, hashed passwords, and medical metadata. Additionally, Cloudinary is integrated as a cloud-based media management solution to securely store and deliver multimedia assets (such as profile pictures, patient symptom images etc).
+The Network Traversal Layer (STUN/TURN Services): To facilitate direct peer-to-peer WebRTC audio and video calls across strict mobile carrier firewalls and NATs (Network Address Translation), the system integrates Metered cloud infrastructure. Metered provides the necessary STUN (Session Traversal Utilities for NAT) and TURN (Traversal Using Relays around NAT) servers to guarantee uninterrupted video streaming even on restrictive 3G/4G mobile networks. The Fig 3.2 below shows a high-level architectural model of the Doctor Chat App.
+Fig 3.3: High-Level Architectural Model of the Proposed System  (Rhema’s Design 2026)
+Design Algorithm for Consultation Workflow:
+To govern the interaction between the patient and the doctor, the following logical algorithm was designed for the C# backend engine:
+START
+Initialize React Native mobile application and check for active user authentication token.
+IF user is unauthenticated, redirect to Login/Registration screen.
+ELSE IF user role == 'Patient':
+a. Fetch list of available/online 'Doctors' from the TiDB database.
+b. Display list to the Patient.
+c. Patient selects a Doctor and inputs preliminary symptoms (uploading images via Cloudinary if necessary).
+d. System generates a ConsultationRequest object and pushes to the selected Doctor.
+ELSE IF user role == 'Doctor':
+a. Listen for incoming ConsultationRequest objects via WebSocket.
+b. IF Request is received, prompt Doctor to Accept or Reject.
+c. IF Doctor Rejects: Send notification to Patient to select another practitioner.
+d. IF Doctor Accepts:
+i. Generate a secure ChatRoomID.
+ii. Map both PatientID and DoctorID to the active consultation in the MySQL database.
+iii. Establish bi-directional WebSocket connection for real-time text exchange.
+WHILE Chat Session is Active:
+a. Encrypt outgoing messages on the client side.
+b. Transmit to C# server; server stores encrypted payload in the relational database and broadcasts to the recipient.
+c. IF either party initiates an Audio/Video Call:
+i. Caller generates WebRTC Session Description Protocol (SDP) Offer.
+ii. C# Server acts as Signaling Server, routing the SDP Offer to the Callee.
+iii. Callee accepts and generates an SDP Answer; routes back via C# Server.
+iv. Both peers exchange Interactive Connectivity Establishment (ICE) candidates via WebSockets.
+v. Direct Peer-to-Peer (P2P) media stream is established utilizing Metered STUN/TURN servers to bypass NAT restrictions.
+WHEN Consultation is concluded:
+a. Doctor marks session as 'Closed' and WebRTC media tracks are stopped.
+b. Terminate WebSocket connection for the specific ChatRoomID.
+c. Archive chat log securely in the database for future medical reference.
+END
+3.3.2 Proposed System Justification
+The proposed Doctor Chat App offers a transformative approach to health informatics by addressing the severe shortcomings of  existing platforms like OgaDoc. This justification outlines why the proposed solution is functionally and economically superior:
+Low-Bandwidth Optimization: Unlike heavy enterprise telehealth software that requires massive data consumption for video feeds, this system is a text-first platform. It requires minimal kilobytes to transmit preliminary diagnostic text, making it highly resilient and operational even on unstable 2G/3G networks common in rural areas.
+Structured Clinical Workspace: It offers a dedicated clinical queue that strictly separates medical duties from doctors' personal lives, solving the professional burnout issue caused by mixing work and personal chats on WhatsApp.
+Self-Contained Security Architecture: Unlike platforms that rely on WhatsApp routing, the proposed system contains its own proprietary SignalR messaging engine. It enforces mandatory JWT identity verification and stores chats securely in an ACID-compliant database, ensuring complete trust and legal compliance.
+3.3.3 Benefits of the Proposed System
+The proposed interactive consultation platform offers immense, multidimensional benefits across the healthcare ecosystem:
+Benefits to the Patient: Patients drastically reduce out-of-pocket expenses related to transportation and save countless hours that would otherwise be wasted in hospital waiting rooms. It also provides immediate, on-the-go access to certified medical professionals for early symptom diagnosis, preventing minor ailments from degrading into critical emergencies.
+Benefits to the Medical Practitioner: Doctors can strictly separate their clinical duties from their personal lives. The app serves as a dedicated digital workspace that can be logged out of when off-duty. Doctors can also handle significantly more preliminary consultations digitally than they can physically, streamlining their workflow.
+Benefits to Healthcare Institutions: By filtering out minor cases (like common colds, minor rashes, or general inquiries) through digital text triage, physical hospital beds and resources are freed up for severe, critical emergencies.
+3.4 System Design
+The software development lifecycle requires system design as its essential process to define the complete framework which includes all system elements and their respective communication paths in the planned application. The interactive telemedicine platform system employs a modular system design which follows a layered structure to achieve scalability and maintainability and user-friendly operation. The design focuses on user interaction with the system together with real-time message delivery and secure data safeguarding.
+3.4.1 Proposed System Modelling (UML)
+Because the Doctor Chat App is an object-oriented application, it is modeled using Unified Modeling Language (UML) to provide a clear structural and behavioral overview of the system components and their interactions.
+Use Case Diagram
+The Use Case diagram visualizes the functional requirements of the system by defining the interactions between the primary actors (Patient, Doctor, and System Administrator) and the core processes within the application boundary. The Fig below shows the use case diagram of the Doctor Chat App.
+
+
+Fig 3.4: Use Case Diagram (Rhema’s Design, 2026)
+Activity Diagram
+The Activity Diagram provides a visual representation of the workflow and the sequence of activities that occur when a patient seeks a medical consultation. It highlights the conditional logic and decision-making processes within the software. The Fig below shows the Activity Diagram of the Doctor Chat App.
+Fig 3.5: Activity Diagram for Requesting a Consultation (Rhema’s Design, 2026)
+Entity Relationship Diagram (ERD)
+The ERD maps out the structural schema of the relational database, illustrating how different data entities relate to one another via primary and foreign keys to maintain ACID data integrity. The Fig below shows the Entity relationship diagram of the Doctor Chat App.
+
+Fig 3.6: Entity Relationship Diagram (Rhema’s Design, 2026)
+Sequence Diagram
+The Sequence Diagram maps the chronological flow of real-time messages, detailing the exact order of operations and API calls between the React Native interfaces and the C# backend server. The Fig below shows the Sequence diagram of the Doctor Chat App.
+
+
+Fig 3.7: Sequence Diagram for Real-Time Chat (Rhema’s Design, 2026)
+Data Flow Diagram (DFD)
+The Data Flow Diagram explains how data moves between user actions, processes, and storage within the system.
+Level 0 (Context Diagram): Shows the Patient and Doctor acting as external entities pushing data (login credentials, messages) into the single central process ("Doctor Chat System"), which returns data (chat history, notifications) back to them. This diagram shows the system from a "bird's eye view," treating your entire C# backend as one central bubble. The Fig below shows the level 0 data flow diagram (context diagram) of the Doctor Chat App.
+
+
+Fig 3.8: Data Flow Diagram (Level 0 Context Diagram) (Rhema’s Design, 2026)
+
+Level 1 DFD: Breaks the central process down into sub-processes: Authentication Process, Routing Process, and Chat Management Process, detailing how data flows from the UI into the specific database tables. This diagram breaks the central bubble open, showing the exact three sub-processes mentioned in your text (Authentication, Routing, and Chat Management) and how they communicate with your MySQL/TiDB database and Cloudinary CDN. The Fig below shows level 1 data flow diagram of the Doctor Chat App.
+Fig 3.9: Data Flow Diagram (Level 1) (Rhema’s Design, 2026)
+3.5 Database Design
+The proposed system utilizes a highly robust relational SQL database structure powered by MySQL and TiDB. This ensures complete ACID compliance necessary for medical records, while TiDB provides horizontal scalability to manage millions of chat records without performance degradation. The database utilizes EF Core as its Object-Relational Mapper (ORM), generating strict schemas with established constraints.
+The database utilizes Entity Framework Core (EF Core) as its Object-Relational Mapper (ORM), generating strict table schemas with established primary and foreign key constraints. Based on the C# backend models, the primary tables and their attributes are outlined in Table 3.1 below:
+Table 3.1: Database Schema and Table Descriptions
+
+3.6 Input/Output Specification
+The Input/Output (I/O) specifications define the interfaces through which users feed data into the application and how the processed information is presented back to them. This ensures the application is highly responsive and user-friendly.
+Input Specifications
+The system captures data through various mobile interface forms optimized for touchscreens in React Native:
+Authentication and Privacy Inputs: Users input their Email addresses and alphanumeric secure passwords through standard text fields which serve as their main method of logging in. The system requires a secondary local "app-lock" password or PIN because it needs to protect the physical security of medical conversations. The application requires this input because it needs to be unlocked after users bring it back from background mode to prevent unauthorized people from accessing protected chat logs..
+Profile and Verification Inputs: Doctors input their medical license numbers and upload verification documents. These files are processed via the C# backend and uploaded directly to Cloudinary for scalable, secure storage storage, where they await manual review and approval by a system administrator.
+Consultation Inputs: Patients input text strings representing their symptoms into the chat text-area. The chat interface also accepts multimedia inputs, allowing patients to upload images (e.g., a photo of a skin rash or physical injury). These images are captured using the device camera, optimized, and uploaded to Cloudinary, which returns a secure URL string saved to the database.
+Output Specifications
+The system processes the inputs and delivers visual and systemic outputs:
+Visual Interface Outputs: The system outputs dynamic UI lists, rendering the names, profiles, and online statuses of available doctors. During a consultation, it outputs real-time chat bubbles and timestamp indicators within the conversation thread. Images stored on Cloudinary are fetched and rendered efficiently using transformed, low-bandwidth URL parameters. During escalated media consultations, the system outputs high-fidelity peer-to-peer audio and video streams rendered via WebRTC native components, utilizing Metered TURN relays as a fallback for strict networks.
+Systemic Outputs: The application creates ongoing Push Notifications which notify users about new messages when the application operates in background mode. The system can produce a complete PDF summary of the consultation log after a chat session ends.
+3.7 Cost Analysis
+In the implementation of the interactive Doctor Chat App, various software services, cloud infrastructures, and developer licenses must be procured to support the development, deployment, and real-time operational capacity of the system.
+Unlike a physical hardware project, this software engineering project relies heavily on cloud computing costs. The total estimated cost for a 12-month pilot deployment of the project components is ₦388,000, as detailed below.
+Cloud Backend Hosting (Render) - ₦70,000: A scalable cloud hosting plan on the Render platform is required to keep the C# ASP.NET backend API and WebSocket connections running continuously with minimal latency and high uptime.
+Distributed Database Hosting (TiDB Cloud) - ₦65,000: A dedicated database cluster utilizing TiDB/MySQL to handle the high volume of relational queries and read/write operations generated by real-time messaging, ensuring absolute ACID compliance.
+WebRTC STUN/TURN Servers (Metered) - ₦30,000: While peer-to-peer video is inherently free, a Relay (TURN) server provided by Metered is strictly required to bypass enterprise firewalls and restrictive NAT configurations to ensure video calls connect flawlessly across mobile networks.
+Cloudinary Media API - ₦25,000: While Cloudinary offers a robust free tier, a basic premium allowance is budgeted to ensure high-bandwidth delivery and secure, encrypted storage of sensitive medical images and document uploads.
+Google Play Console License - ₦38,000: A mandatory, one-time developer registration fee (approx. $25) required by Google to officially publish the React Native Android application on the Google Play Store.
+Apple Developer Program - ₦150,000: An annual subscription fee (approx. $99) required by Apple Inc. to publish, test, and distribute the iOS version of the application on the Apple App Store.
+Domain Name and SSL Certificate - ₦10,000: Procurement of a domain name for the backend API endpoints and a premium Secure Sockets Layer (SSL) certificate to cryptographically secure the transport layer (HTTPS), ensuring that all traffic is protected from man-in-the-middle (MITM) attacks.
+The Table 3.2 below shows a compiled and evaluated Summary of Estimated Software Setup Costs:
+Table 3.2: Summary of Estimated Software Setup Costs
+
+
+
+
+
+
+
+
+CHAPTER FOUR
+SYSTEM IMPLEMENTATION AND DISCUSSION
+4.1 Programming Language of Implementation
+The Doctor Chat App needed an advanced development environment that could support full-stack development through its modern and scalable capabilities. The system architecture used two separate environments to create an application that functions smoothly across different mobile platforms in real time. The following programming languages, frameworks, and environments were utilized:
+Frontend (Mobile Application):
+TypeScript and JavaScript (ES6+): Utilized as the core programming languages for engineering the user interfaces, handling client-side state, and managing API interactions.
+React Native (with Expo Framework): Employed to build the cross-platform mobile application. Expo Router was utilized for file-based navigation, allowing seamless transitions between the Patient dashboard, Doctor dashboard, and active chat rooms.
+WebRTC API: Integrated via the react-native-webrtc module to interface directly with the mobile device's native hardware (camera and microphone) to establish peer-to-peer (P2P) multimedia streams.
+Backend (Application Logic and Signaling Server):
+C# (C-Sharp): The primary object-oriented programming language utilized to engineer the backend server logic, security middleware, and routing.
+ASP.NET Core 8 (Minimal API): Employed as the high-performance web framework to construct the RESTful API endpoints, handle HTTP requests, and manage JSON Web Token (JWT) authentication.
+Microsoft SignalR: A real-time software library utilized within the .NET ecosystem to manage persistent, bi-directional WebSocket connections, enabling instantaneous text delivery and WebRTC call signaling.
+Database, Media Storage, and Network Infrastructure:
+Entity Framework Core (EF Core): Served as the Object-Relational Mapper (ORM), allowing C# models to be dynamically translated into strict relational schemas without writing raw SQL.
+TiDB / MySQL: The distributed SQL database engine utilized to store complex relational data, ensuring complete ACID compliance for medical records.
+Cloudinary: A cloud-based Content Delivery Network (CDN) utilized to securely upload, optimize, and store sensitive media (such as physical symptom images and doctor verification licenses).
+Metered STUN/TURN Services: Integrated into the network traversal layer to relay WebRTC media streams and bypass restrictive mobile carrier Network Address Translation (NAT) firewalls.
+4.1.1 Justification of programming language used
+The selection of these specific programming languages and infrastructures was strictly driven by the architectural requirements of building a secure, low-latency telemedicine application:
+TypeScript and React Native: React Native was chosen because it allows the compilation of a single codebase into native application binaries for both Android and iOS devices, drastically reducing development overhead. TypeScript was integrated to enforce strict static typing on complex data structures (like Consultation and Message objects), preventing runtime mismatches between the frontend and backend.
+C# and ASP.NET Core: C# running on the .NET 8 runtime is industry-renowned for its enterprise-level security, memory safety, and rapid execution speed. The Minimal API architecture was chosen to reduce boilerplate code while centralizing critical authentication and Cloudinary API integrations securely.
+Microsoft SignalR: Traditional HTTP polling is insufficient for a chat application as it heavily drains mobile battery life. SignalR was chosen because it maintains an open WebSocket connection, allowing the C# backend to push chat messages and incoming call alerts to the mobile device with sub-second latency.
+WebRTC with Metered Relays: WebRTC was selected because it establishes a direct P2P connection, bypassing the central server for heavy video traffic and reducing hosting costs. However, because direct P2P fails on strict mobile networks, the addition of Metered STUN/TURN servers guarantees that the high-fidelity video stream will seamlessly fall back to a secure relay, ensuring the call never drops.
+4.2 System Requirements
+For the compilation, deployment, and actual use of the application to go through successfuly, it needs particular hardware , and software criteria  to be met. In practice, these are sorted into administrative or development needs on one side and end user needs on the other side, yes, kind of simple.
+4.2.1 Hardware Requirements
+Development and Server Hardware:
+To host the C# ASP.NET Core backend and relational database, the cloud environment must meet the following minimum specifications:
+Processor: Minimum of 1 vCPU core (2+ cores recommended for high concurrency).
+Memory (RAM): 1 GB minimum (2 GB highly recommended to handle concurrent SignalR WebSocket threads).
+Storage: 20 GB Solid State Drive (SSD) for the hosting environment and database clusters.
+End-User Hardware Requirements (Mobile Devices):
+For patients and medical practitioners to run the application smoothly:
+Processor: Quad-core ARM processor (1.4 GHz or higher).
+Memory (RAM): 2 GB minimum (3 GB recommended for seamless WebRTC video encoding).
+Storage: At least 50 MB of available local storage space.
+Peripherals: Functioning front-facing camera, microphone, and speaker/earpiece module.
+Network: Active 3G, 4G LTE, or stable Wi-Fi internet connection.
+4.2.2 Software Requirements
+Server and Development Software:
+Operating System: Windows, macOS, or Linux distribution.
+Runtime Environments: Node.js (v18+) for Expo CLI, and .NET 8.0 SDK for the C# backend.
+Database Management: MySQL Server v8.0+ or a TiDB Cloud Cluster instance.
+End-User Software Requirements:
+Android Devices: Android Operating System version 8.0 (Oreo) or higher.
+iOS Devices: Apple iOS version 12.0 or higher.
+Permissions: The application requires explicit OS-level permissions granted by the user to access the Camera, Microphone, Photo Library, and Push Notification services.
+4.3 Implementation Guidelines
+The Doctor Chat App operates through a decoupled deployment method which needs special configuration processes to protect data transmission between its backend API and mobile client system.
+Phase 1: Backend API Configuration (C# / .NET 8)
+Environment Variables (appsettings.json): The administrator must conFig the server with highly secure environment variables, including:
+The ConnectionStrings parameter pointing to the TiDB/MySQL database cluster.
+The JWT SecretKey, Issuer, and Audience strings required for generating cryptographic session tokens.
+The CloudinarySettings (CloudName, ApiKey, ApiSecret) required for authenticating media uploads.
+Database Migration: Utilizing EF Core, the administrator executes the dotnet ef database update command. This translates the C# data models (e.g., Users, Doctors, Appointments, Messages) into structured, relational SQL tables within the database.
+Hub Initialization: The backend maps SignalR endpoints (e.g., /chathub) and ConFigs Cross-Origin Resource Sharing (CORS) to accept incoming WebSocket connections exclusively from the authenticated mobile application.
+Phase 2: Frontend Mobile Client Configuration (React Native)
+Expo Configuration (app.json): ConFiged with the app’s unique bundle identifiers (com.doctorchatapp) and Expo plugins, specifically the @config-plugins/react-native-webrtc module, which dynamically injects native hardware permissions into the AndroidManifest and iOS Info.plist during compilation.
+State Management: The frontend utilizes React Context (AuthContext) to manage session states. It integrates Expo SecureStore to safely persist JWT tokens locally on the device.
+Compilation and Distribution: The application is compiled into native installation binaries (.apk for Android, .ipa for iOS) using Expo Application Services (EAS Build), optimizing the JavaScript bundle for distribution.
+Phase 3: Security and Privacy Implementation
+Given the extreme sensitivity of medical data, the final phase of implementation heavily prioritized systemic and physical security protocols:
+Cryptographic Identity Management: The system uses BCrypt hashing to permanently hide user passwords from the database. The system uses JWTs to verify each API request according to the user's Role-Based Access Control (RBAC) permissions.
+Manual License Verification: The system implements restrictions on all newly registered "Doctor" accounts because of medical fraud detection requirements. The application logic prevents them from accepting consultations until an Administrator manually reviews their Cloudinary document URL and toggles their VerificationStatus to active in the database.
+Physical Privacy (App-Lock): A local secondary PIN system known as App-Lock was created because mobile devices tend to be shared by users. The application requires users to enter their PIN when they return from background mode which protects the active chat logs from unauthorized physical access.
+4.4 Results and Discussions
+Following the comprehensive implementation of the architectural models detailed in Chapter 3, the Doctor Chat App was successfully compiled, deployed, and evaluated.
+4.4.1 System Results
+The system successfully translated theoretical telehealth objectives into a highly functional, secure, and low-bandwidth digital triage environment.
+Authentication and Role-Based Separation: The JWT-based role-based access control system implementation achieved successful results. The application successfully routes authenticated users to distinct interfaces: Patients are presented with tools to search for verified doctors and log symptoms; Doctors access a clinical dashboard which shows their pending appointment requests and active patient queues. The manual verification workflow ensures that the patient search engine only populates with fully authenticated medical practitioners. The Fig 4.5 and Fig 4.6 shows a screenshot of the Doctor Chat App Authentication Screen for Doctor side and Patient side and their respective dashboards.
+
+Fig 4.5: Screenshot of Doctor Chat App Authentication Screen for Doctor side and Patient side (Rhema’s Design, 2026)
+
+Fig 4.6: Screenshot of the Patient Dashboard and Doctor Dashboard
+Synchronous Chat and Low-Bandwidth Triage: The text-first consultation interface demonstrated exceptional efficiency. By utilizing SignalR WebSockets, the application bypassed the latency issues typical of HTTP polling. Messages and Cloudinary-hosted symptom images were transmitted and rendered on the recipient's screen almost instantaneously. This confirmed the core hypothesis: the system is exceptionally resilient and functional on slower 2G/3G mobile networks, as transmitting basic diagnostic text and optimized image URLs requires minimal bandwidth. Fig 4.7 shows a Screenshot of an Active Text Chat Interface with Image Upload.
+
+Fig 4.7: Screenshot of an Active Text Chat Interface with Image Upload (Rhema’s Design, 2026)
+Multimedia Escalation and Network Traversal: The integration of WebRTC provided a seamless path for escalating a text chat into an audio or video consultation when visual examination became necessary. The integration of Metered STUN/TURN servers proved critical during testing; while direct P2P connections succeeded on identical Wi-Fi networks, the Metered relays successfully took over when transitioning to restrictive mobile carrier networks, ensuring the high-fidelity video streams remained uninterrupted. Fig 4.8 displays a Screenshot of Active WebRTC Audio/Videocall Interface.
+
+Fig 4.8: Screenshot of Active WebRTC Audio/Videocall Interface (Rhema’s Design, 2026)
+Application Size and Storage Optimization: A critical requirement for ensuring the application remained permanently installed on the target demographic's mobile devices was minimizing the software's storage footprint. Initial deployment tests utilizing standard direct Android Package (.apk) files resulted in a heavy application size. By pivoting the deployment architecture to utilize highly optimized Android App Bundles (.aab), the system achieved a massive 70.1% reduction in storage overhead. Table 4.3 below details this optimization.
+Table 4.3: App Size Optimization
+Human Usability and System Acceptance: Beyond the technical backend metrics, the frontend interface was empirically evaluated using the System Usability Scale (SUS) questionnaire administered to the pilot demographic. The quantitative data yielded exceptionally high average scores of 86.25 among doctors and 87.50 among patients, both significantly above the industry standard baseline of 68. Furthermore, frequency analysis of the perceived application complexity revealed that over 81% of users found the system easy to navigate without requiring external technical support. Fig 4.9 and Fig 4.10 below visually illustrate these usability findings.
+
+Fig 4.9: Average SUS Scores by User Group (Rhema’s Design, 2026)
+
+Fig 4.10: Perceived Application Complexity (Rhema’s Design, 2026)
+
+4.4.2 Discussion of Findings
+The empirical results obtained from the deployment of the Doctor Chat App demonstrate significant architectural and clinical progress compared to the baseline platforms evaluated in prior literature. Recent evaluations of consumer mHealth applications by Jalali et al. (2021) and Ting et al. (2020) highlighted that reliance on third-party routing platforms, such as OgaDoc’s integration with WhatsApp, introduces severe privacy vulnerabilities. These existing models fail because they lack centralized backend encryption and auditable medical logging, leading to the permanent fragmentation of Electronic Health Records (EHR). The successful deployment of this system proves that engineering an enclosed ecosystem utilizing JSON Web Tokens (JWT) for cryptographic identity management, alongside mandatory manual medical license verification via the Cloudinary API, establishes a digital workspace that strictly adheres to medical compliance standards. Furthermore, the programmatic recommendations established by Mahmood et al. (2020) for engineering dedicated, secure mobile health tools to prevent medical fraud have been fully realized within this C# ASP.NET architecture.
+From a telecommunications and network resilience perspective, the text-first ecosystem engineered for this project exhibits vastly superior performance when compared to the enterprise telehealth systems reviewed by Hirko et al. (2021) and Garfan et al. (2021). Those prior studies noted that traditional video-first medical platforms frequently suffer from severe connection timeouts and data packet loss in rural, low-bandwidth areas. The Doctor Chat App successfully bypassed these infrastructure limitations by abandoning traditional HTTP REST polling in favor of lightweight Microsoft SignalR WebSocket connections. This allowed for instantaneous asynchronous messaging that consumes negligible mobile data. Furthermore, when visual clinical assessment became strictly necessary, the integration of Metered STUN/TURN relays successfully facilitated WebRTC peer-to-peer escalation, dynamically routing the video stream through secure proxies to bypass complex mobile carrier firewalls without dropping the consultation.
+A critical, yet often overlooked, barrier to digital health adoption in developing regions is local device storage capacity. El-Rashidy et al. (2021) established that mobile health applications must minimize their software weight, as outpatients using lower-end mobile devices will frequently uninstall heavy applications. The deployment data from this project directly addresses this limitation. By shifting the deployment architecture from standard .apk binaries (which resulted in a heavy 144MB footprint) to highly optimized Android App Bundles (.aab), the final production size was reduced to merely 43MB. This 70.1% reduction in storage overhead empirically validates the system’s high accessibility for the rural patient population in Edo State, ensuring the application can remain permanently installed on user devices for continuous triage.
+Beyond the technical backend metrics, the quantitative human usability data collected during the pilot phase overwhelmingly validates the frontend interface design. A major concern highlighted by Breton et al. (2021) was the high rate of physician abandonment due to slow, complex, and un-intuitive user interfaces. However, the System Usability Scale (SUS) data gathered from this study directly counters that trend. With an average usability score of 86.25 among medical doctors and 87.50 among outpatients, the system scored significantly above the industry baseline of 68. The frequency analysis, which indicated that over 81% of users required zero technical support to navigate the application, proves that the React Native framework successfully delivered a seamless, cross-platform experience that bridges the digital literacy gap.
+Ultimately, the synthesis of these findings, the robust backend security, the low-bandwidth network traversal, the optimized storage footprint, and the high user acceptance rates, verifies the core hypothesis of this research. The Doctor Chat App is not merely a theoretical concept, but a highly scalable, secure, and accessible digital health framework. By successfully transferring the point of preliminary care to the patient's smartphone without compromising legal privacy standards, this system provides a viable technological blueprint for decongesting physical hospital infrastructure in developing regions.
+.
+
+
+
+
+
+
+
+
+CHAPTER FIVE
+SUMMARY, CONCLUSION AND RECOMMENDATIONS
+5.1 Summary of Major Findings
+Doctor Chat App design and implementation process together with its evaluation procedures produced important results about how telemedicine operates in developing regions:
+Low-Bandwidth Resilience: The system showed that a text-first diagnostic method which used SignalR WebSockets required much less bandwidth than standard telehealth systems used in enterprises. The system maintained strong performance on 2G and 3G mobile networks because it could overcome the connectivity problems that are common in rural medical facilities.
+Network Traversal Efficacy: WebRTC successfully integrated with Metered STUN/TURN relays to bypass mobile carrier firewalls through their NAT systems. The study demonstrated that cellular networks can support peer-to-peer video transmission with high fidelity through strict network conditions.
+Security and Role Verification: The implementation of JSON Web Tokens (JWT) and a strict manual license verification workflow effectively eliminated medical fraud risk. The system successfully separated the workflows of patients and practitioners while demonstrating better performance than unsecured consumer messaging services such as WhatsApp.
+Physical Privacy Protection: The system achieved successful protection of medical chat logs through its imple mentation of local secondary App-Lock PIN access control, which prevented unauthorized access to shared mobile devices.
+5.2 Conclusion
+The research study investigated two problems which involved hospital overcrowding and unsafe use of social messaging applications for medical triage. The project achieved its main goals by developing a telemedicine platform which operated securely at low bandwidth:
+Objective I (Design an intuitive mobile interface): The engineering team developed user-oriented React Native dashboards through their decoupled engineering solution to achieve successful resolution of the problem. The system provided patients with an efficient doctor search and chat interface which doctors used to organize their upcoming appointments through a clinical queue system.
+Objective II (Develop a cross-platform application): The Expo framework and React Native were used to accomplish this goal. The system operated with one TypeScript codebase which produced native installation binaries that worked well on both Android and iOS devices.
+Objective III (Evaluate system performance and security): The successful deployment and testing of the application led to this achievement. The system performance evaluation used three components which included instant SignalR text delivery and WebRTC TURN relay fallbacks and BCrypt password hashing with local App-Lock security.
+In conclusion, the Doctor Chat App functions as a digital health solution which complies with legal requirements and enables extensive system expansion. The study demonstrates that developing countries can successfully reduce overcrowding at medical facilities through the implementation of dedicated secure mobile triage solutions..
+5.3 Recommendations
+Based on the prior research and successful implementation of the studies itself, we suggest the following guidelines:
+Recommendations Based on Current Work:
+Adoption by Healthcare Institutions: Primary healthcare clinics and government hospitals in Nigeria should implement low-bandwidth text-first triage systems which include the Doctor Chat App as their preferred system. The system will enable standard out-patient operations to function more efficiently while safeguarding doctors' personal contact details from being disclosed.
+Phasing out Consumer Messaging Apps: The regulatory health authorities need to prevent medical professionals from using unencrypted commercial applications because they should only use secure systems which enforce Role-Based Access Control.
+Recommendations for Future Research and Development:
+Integration with National Identity Databases: Future iterations of this software should seek API integration with national medical and dental council databases. The system would gain the ability to verify doctor license numbers through automatic processes which would eliminate the need for human administrative checks.
+Artificial Intelligence (AI) Triage Integration: Future researchers should explore integrating an AI-powered symptom checker into the chat interface. The AI system can perform initial diagnostic inquiries with patients while it creates a concise medical record that physicians need to review before entering the chat.
+Electronic Pharmacy (e-Pharmacy) Routing: Future developments should expand the application's database schema to connect with local pharmacies. The system would enable approved physicians to create digital prescriptions which they could send to nearby pharmacies for instant medication pickup or delivery.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REFERENCES
+Alhajri, N., Simsekler, M. C. E., Alfalasi, S. R., Alhashmi, M. A., Almutawa, A. I., Alharthi, R., ... and Aljafari, M. A. (2021). Physicians’ attitudes toward telemedicine consultations during the COVID-19 pandemic: cross-sectional study. JMIR Medical Informatics, 9(6), e29251.
+Alwashmi, M. F. (2020). The use of digital health in the detection and management of COVID-19. International Journal of Environmental Research and Public Health, 17(8), 2906.
+Amin, R., Kumar, N., Biswas, G. P., Iqbal, R., and Chang, V. (2021). A light weight authentication protocol for IoT-enabled devices in distributed Cloud Computing environment. Future Generation Computer Systems, 114, 1-13.
+Anthony Jnr, B. (2020). Implications of telehealth and digital care solutions during COVID-19 pandemic. Health Policy and Technology, 9(4), 399-414.
+Bashshur, R., Doarn, C. R., Frenk, J. M., Kvedar, J. C., and Shannon, G. W. (2020). Telemedicine and the COVID-19 pandemic. Telemedicine and e-Health, 26(5), 517-520.
+Bassi, A., Arfin, S., John, O., and Jha, V. (2021). An overview of mobile applications to support the coronavirus disease 2019 response in India. Indian Journal of Medical Research, 153(1), 68-73.
+Bhaskar, S., Bradley, S., Chattu, V. K., Adisesh, A., Nurtazina, A., Kyrykbayeva, S., ... and Ray, D. (2020). Telemedicine across the globe-position paper from the COVID-19 pandemic health system resilience PROGRAM (REPROGRAM) international consortium. Frontiers in Public Health, 8, 556720.
+Bhatia, R. S., Chu, C., Pang, A., Tadrous, M., Stamenova, V., and Cram, P. (2021). Virtual care use before and during the COVID-19 pandemic: a repeated cross-sectional study. CMAJ Open, 9(1), E107-E114.
+Bitar, H., and Alismail, S. (2021). The role of eHealth, telehealth, and telemedicine for chronic disease patients during COVID-19 pandemic: A rapid systematic review. Digital Health, 7, 20552076211009396.
+Bokolo, A. J. (2021). Exploring the adoption of telemedicine and virtual software for care of outpatients during and after COVID-19 pandemic. Irish Journal of Medical Science, 190(1), 1-10.
+Breton, M., Sullivan, E. E., Deville-Stoetzel, N., McKinstry, D., DePuccio, M., Sriharan, A., ... and Griffiths, F. (2021). Telehealth challenges during COVID-19 as reported by primary healthcare physicians in Quebec and Massachusetts. BMC Family Practice, 22(1), 1-13.
+Calton, B., Abedini, N., and Fratkin, M. (2020). Telemedicine in the time of coronavirus. Journal of Pain and Symptom Management, 60(1), e12-e14.
+Dorsey, E. R., and Topol, E. J. (2016). State of telehealth. New England Journal of Medicine, 375(2), 154-161.
+El-Rashidy, N., El-Sappagh, S., Islam, S. M. R., El-Bakry, H. M., and Abdelrazek, S. (2021). Mobile health in remote patient monitoring for chronic diseases: Principles, trends, and challenges. Diagnostics, 11(4), 607.
+Fagherazzi, G., Goetzinger, C., Rashid, M. A., Aguayo, G. A., and Huiart, L. (2020). Digital health strategies to fight COVID-19 worldwide: challenges, recommendations, and a call for papers. Journal of Medical Internet Research, 22(6), e19284.
+Freeman, A. (2022). Pro ASP.NET Core 6: Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages. Apress.
+Gajarawala, S. N., and Pelkowski, J. N. (2021). Telehealth benefits and barriers. The Journal for Nurse Practitioners, 17(2), 218-221.
+Garfan, S., Alamoodi, A. H., Zaidan, B. B., Zaidan, A. A., AlZubi, O. S., ... and Momani, F. (2021). Telehealth utilization during the Covid-19 pandemic. Computers in Biology and Medicine, 138, 104880.
+Giansanti, D. (2021). The role of the mHealth in the fight against the Covid-19. Frontiers in Public Health, 9, 608828.
+Golinelli, D., Boetto, E., Carcello, G., Nanni, P. D., Pelatti, C., Toscano, F., ... and Fantini, M. P. (2020). Adoption of digital technologies in health care during the COVID-19 pandemic: systematic review of early scientific literature. Journal of Medical Internet Research, 22(11), e22280.
+Grand View Research. (2022). mHealth Apps Market Size, Share and Trends Analysis Report By Type, By Region, And Segment Forecasts, 2022 - 2030. Grand View Research.
+Haleem, A., Javaid, M., Singh, R. P., and Suman, R. (2021). Telemedicine for healthcare: Capabilities, features, barriers, and applications. Sensors International, 2, 100117.
+Hirko, K. A., Meier, J. M., Yin, Z., Hughes, A. K., Carmody, M., and Eye, C. (2021). Telehealth in response to the COVID-19 pandemic: Implications for rural health disparities. Journal of the American Medical Informatics Association, 28(2), 365-368.
+Hollander, J. E., and Carr, B. G. (2020). Virtually perfect? Telemedicine for COVID-19. New England Journal of Medicine, 382(18), 1679-1681.
+Irizarry, T., DeVito Dabbs, A., and Curran, C. R. (2015). Patient portals and patient engagement: a state of the science review. Journal of Medical Internet Research, 17(6), e148.
+Kao, C. K., and Liebovitz, D. S. (2017). Consumer mobile health apps: current state, barriers, and future directions. PMandR, 9(5), S106-S115.
+Keesara, S., Jonas, A., and Schulman, K. (2020). Covid-19 and health care’s digital revolution. New England Journal of Medicine, 382(23), e82.
+Kruse, C. S., Krowski, N., Rodriguez, B., Tran, L. N., Vela, J., and Brooks, M. (2017). Telehealth and patient satisfaction: a systematic review and narrative analysis. BMJ Open, 7(8), e016242.
+Mahmood, S., Hasan, K., Colder Carras, M., and Labrique, A. (2020). Global preparedness against COVID-19: We must leverage the power of digital health. JMIR Public Health and Surveillance, 6(2), e18980.
+Mann, D. M., Chen, J., Chunara, R., Testa, P. A., and Nov, O. (2020). COVID-19 transforms health care through telemedicine. Journal of the American Medical Informatics Association, 27(9), 1478-1481.
+Martinez-Perez, B., de la Torre-Diez, I., and Lopez-Coronado, M. (2015). Privacy and security in mobile health apps: a review and recommendations. Journal of Medical Systems, 39(1), 181.
+Ming, L. C., Untong, N., Aliudin, N. A., Osili, N., Kifli, N., Tan, C. S., ... and Goh, B. H. (2020). Mobile health apps on COVID-19 launched in the early days of the pandemic: content analysis and review. JMIR mHealth and uHealth, 8(9), e19796.
+Monaghesh, E., and Hajizadeh, A. (2020). The role of telehealth during COVID-19 outbreak: A systematic review. BMC Public Health, 20(1), 1-9.
+Nittari, G., Khuman, R., Baldoni, S., Pallotta, G., Battineni, G., Sirignano, A., ... and Ricci, G. (2020). Telemedicine practice: review of the current ethical and legal challenges. Telemedicine and e-Health, 26(12), 1427-1437.
+Nittas, V., Lun, P., Ehrler, F., Puhan, M. A., and Mütsch, M. (2020). Electronic patient-generated health data to facilitate disease prevention and health promotion: scoping review. Journal of Medical Internet Research, 22(10), e19990.
+Ohannessian, R., Duong, T. A., and Odone, A. (2020). Global telemedicine implementation and integration within health systems to fight the COVID-19 pandemic: a call to action. JMIR Public Health and Surveillance, 6(2), e18810.
+Omboni, S., Padwal, R. S., Alessa, T., Bhasin, B., Exec, M., ... and Kario, K. (2022). The worldwide impact of telemedicine during COVID-19: current evidence and recommendations for the future. Connected Health, 1, 7-35.
+Papageorgiou, A., Strigkos, M., Politou, E., Alepis, E., Solanas, A., and Patsakis, C. (2018). Security and privacy analysis of mobile health applications: The alarming state of practice. IEEE Access, 6, 9390-9403.
+Pérez-Sust, P., Solans, O., Fajardo, J. C., Medina Peralta, M., Rodés, P., Garolera, M. H., ... and Piera, J. (2020). Responses of the Catalan health system to the coronavirus disease 2019 (COVID-19) pandemic using virtual care and telemedicine. JMIR Public Health and Surveillance, 6(2), e19206.
+Portnoy, J., Waller, M., and Elliott, T. (2020). Telemedicine in the era of COVID-19. The Journal of Allergy and Clinical Immunology: In Practice, 8(5), 1489-1491.
+Primo Medical Services. (2024). OgaDoc [Mobile application software]. Retrieved from https://ogadoc.com
+Scott Kruse, C., Karem, P., Shifflett, K., Vegi, L., Ravi, K., and Brooks, M. (2018). Evaluating barriers to adopting telemedicine worldwide: A systematic review. Journal of Telemedicine and Telecare, 24(1), 4-12.
+Shaver, J. (2022). The state of telehealth before and after the COVID-19 pandemic. Primary Care: Clinics in Office Practice, 49(4), 517-530.
+Sittig, D. F., and Singh, H. (2020). COVID-19 and the need for a national health information technology infrastructure. JAMA, 323(23), 2373-2374.
+Smith, A. C., Thomas, E., Snoswell, C. L., Haydon, H., Mehrotra, A., ... and Caffery, L. J. (2020). Telehealth for global emergencies: Implications for coronavirus disease. Journal of Telemedicine and Telecare, 26(5), 309-313.
+Sun, Y., Lo, F. P. W., and Lo, B. (2021). Security and privacy for the internet of medical things in healthcare. IEEE Systems Journal, 15(4), 5036-5047.
+Ting, D. S. W., Carin, L., Dzau, V., and Wong, T. I. (2020). Digital technology and COVID-19. Nature Medicine, 26(4), 459-461.
+Tuckson, R. V., Edmunds, M., and Hodgkins, M. L. (2017). Telehealth. New England Journal of Medicine, 377(16), 1585-1592.
+Vidal-Alaball, J., Acosta-Roja, R., Pastor Hernández, N., Sanchez Luque, U., Morrison, D., ... and Lopez Segui, F. (2020). Telemedicine in the face of the COVID-19 pandemic. Atencion Primaria, 52(6), 418-422.
+World Health Organization. (2021). Global strategy on digital health 2020-2025. Geneva: World Health Organization.
+Wosik, J., Fudim, M., Cameron, B., Gellad, Z. F., Cho, A., ... and Hernandez, A. F. (2020). Telehealth transformation: COVID-19 and the rise of virtual care. Journal of the American Medical Informatics Association, 27(6), 957-962.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+APPENDICES
+APPENDIX A: SOURCE CODES
+This section contains essential excerpts of the source code utilized in the development of the Doctor Chat App, highlighting the core logic for the frontend mobile interface and the backend API architecture.
+Frontend Mobile Application (React Native / Expo)
+File: App.tsx (Main Entry Point and Navigation Setup)
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { AuthProvider } from './context/AuthContext';
+import LoginScreen from './screens/LoginScreen';
+import PatientDashboard from './screens/PatientDashboard';
+import DoctorDashboard from './screens/DoctorDashboard';
+import ChatRoom from './screens/ChatRoom';
+
+const Stack = createStackNavigator();
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="PatientDashboard" component={PatientDashboard} />
+          <Stack.Screen name="DoctorDashboard" component={DoctorDashboard} />
+          <Stack.Screen name="ChatRoom" component={ChatRoom} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
+  );
+}
+
+File: SignalrService.ts (SignalR WebSocket Connection Logic)
+import * as signalR from '@microsoft/signalr';
+import * as SecureStore from 'expo-secure-store';
+import { API_BASE_URL } from '../config';
+import { authEvents } from './authEvents';
+
+class SignalRService {
+    private chatConnection: signalR.HubConnection | null = null;
+    private signalingConnection: signalR.HubConnection | null = null;
+    private messageCallbacks: ((message: any) => void)[] = [];
+    private availabilityCallbacks: ((data: any) => void)[] = [];
+
+    // Signaling Callbacks
+    private incomingCallCallbacks: ((data: any) => void)[] = [];
+    private callAnsweredCallbacks: ((data: any) => void)[] = [];
+    private callEndedCallbacks: ((data: any) => void)[] = [];
+    private callFailedCallbacks: ((data: any) => void)[] = [];
+    private callRejectedCallbacks: ((data: any) => void)[] = [];
+    private missedCallCallbacks: ((data: any) => void)[] = [];
+    private offerCallbacks: ((from: string, callId: string, sdp: string) => void)[] = [];
+    private answerCallbacks: ((from: string, callId: string, sdp: string) => void)[] = [];
+    private candidateCallbacks: ((from: string, callId: string, candidate: string) => void)[] = [];
+
+    onMessageReceived(callback: (message: any) => void) {
+        this.messageCallbacks.push(callback);
+        return () => {
+            this.messageCallbacks = this.messageCallbacks.filter(c => c !== callback);
+        };
+    }
+
+    onAvailabilityChanged(callback: (data: any) => void) {
+        this.availabilityCallbacks.push(callback);
+        return () => {
+            this.availabilityCallbacks = this.availabilityCallbacks.filter(c => c !== callback);
+        };
+    }
+
+    on(event: string, callback: (...args: any[]) => void) {
+        this.chatConnection?.on(event, callback);
+        return () => {
+            this.chatConnection?.off(event, callback);
+        };
+    }
+
+    // Signaling Listener Registry
+    onIncomingCall(cb: (data: any) => void) {
+        this.incomingCallCallbacks.push(cb);
+        return () => { this.incomingCallCallbacks = this.incomingCallCallbacks.filter(c => c !== cb); };
+    }
+Backend API (C# / ASP.NET Core)
+File: Program.cs
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using BCrypt.Net;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.ComponentModel.DataAnnotations.Schema;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+
+namespace DoctorChatApi;
+
+public class UtcDateTimeConverter : JsonConverter<DateTime>
+{
+    public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => reader.GetDateTime().ToUniversalTime();
+    public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options) => writer.WriteStringValue(DateTime.SpecifyKind(value, DateTimeKind.Utc).ToString("O"));
+}
+
+public class Program
+{
+    private static JsonElement? _cachedTurnCredentials = null;
+    private static DateTime? _lastTurnFetch = null;
+
+    public static async Task Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+APPENDIX B: SAMPLE OUTPUTS
+This section provides visual representations of the deployed application, demonstrating the user interface and system functionality as experienced by the end-users.
+User Authentication and Onboarding
+
+Patient Interface
+
+Doctor Interface
+
+Synchronous Chat Interface
+
+WebRTC Video Escalation
+
+
+APPENDIX C: SYSTEM USABILITY SCALE (SUS) QUESTIONNAIRE
+Instructions: Please read each statement carefully and indicate the extent to which you agree or disagree regarding your experience using the Doctor Chat App.
+(Scale: 1 = Strongly Disagree, 2 = Disagree, 3 = Neutral, 4 = Agree, 5 = Strongly Agree)
+Scoring Guide (For Researcher Reference)
+When data is collected and analyzed for Chapter 4, the standard SUS calculation works as follows:
+For odd-numbered questions (1, 3, 5, 7, 9): Subtract 1 from the score the user gave. (e.g., If they picked 5, their score is 4).
+For even-numbered questions (2, 4, 6, 8, 10): Subtract their score from 5. (e.g., If they picked 4, their score is 1).
+Final Calculation: Add up all the converted scores for a single user, then multiply that total by 2.5.
+Note: This calculation yields a final usability score out of 100 for that specific participant. A score above 68 is generally considered above-average usability in industry standards.
