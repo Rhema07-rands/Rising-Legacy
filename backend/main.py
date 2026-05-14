@@ -5,9 +5,11 @@ from dotenv import load_dotenv
 import models
 import schemas
 from database import engine, get_db
-from services.gpa_calculator import calculate_grade_point, calculate_cgpa, get_degree_classification
+from services.gpa_calculator import calculate_gpa, calculate_cgpa, get_degree_classification
+from collections import defaultdict
+from typing import List
 
-load_dotenv()  # Loads backend/.env when running locally
+load_dotenv()
 
 # Create tables if they don't exist
 try:
@@ -15,7 +17,24 @@ try:
 except Exception as e:
     print(f"Failed to create tables: {e}")
 
-app = FastAPI(title="Grading System API")
+# Pre-create Admin user
+try:
+    db = next(get_db())
+    admin_user = db.query(models.User).filter(models.User.username == "admin").first()
+    if not admin_user:
+        admin = models.User(
+            username="admin",
+            password_hash="admin123", # hardcoded as requested
+            role="Admin",
+            full_name="System Administrator",
+            level=0
+        )
+        db.add(admin)
+        db.commit()
+except Exception as e:
+    print(f"Failed to create admin user: {e}")
+
+app = FastAPI(title="CGPA Calculator API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -25,252 +44,123 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def letter_to_point(grade: str) -> float:
+    mapping = {'A': 5.0, 'B': 4.0, 'C': 3.0, 'D': 2.0, 'E': 1.0, 'F': 0.0}
+    return mapping.get(grade.upper(), 0.0)
+
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the Automated Electronic Grading System API"}
+    return {"message": "Welcome to the CGPA Calculator API"}
 
-@app.post("/users/", response_model=schemas.UserResponse, status_code=status.HTTP_201_CREATED)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(models.User).filter(models.User.username == user.username).first()
-    if db_user:
+@app.post("/auth/signup", response_model=schemas.UserResponse, status_code=status.HTTP_201_CREATED)
+def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    if db.query(models.User).filter(models.User.username == user.username).first():
         raise HTTPException(status_code=400, detail="Username already registered")
     
-    # In a real app, hash the password properly (e.g. using passlib bcrypt)
-    fake_hashed_password = user.password + "notreallyhashed"
     new_user = models.User(
         username=user.username,
-        password_hash=fake_hashed_password,
-        role=user.role
+        password_hash=user.password, # Plain text for simplicity as per requirements
+        role="Student",
+        full_name=user.full_name,
+        level=user.level
     )
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return new_user
 
-@app.post("/admin/enroll-student", status_code=status.HTTP_201_CREATED)
-def enroll_student(req: schemas.EnrollStudentRequest, db: Session = Depends(get_db)):
-    # 1. Check if user already exists
-    if db.query(models.User).filter(models.User.username == req.student_id).first():
-        raise HTTPException(status_code=400, detail="Student ID already registered")
-        
-    # 2. Create User
-    # In a real app, hash "password123" properly
-    fake_hashed_password = "password123" + "notreallyhashed"
-    new_user = models.User(
-        username=req.student_id,
-        password_hash=fake_hashed_password,
-        role=models.RoleEnum.student
-    )
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    
-    # 3. Create Student Profile
-    new_student = models.Student(
-        user_id=new_user.id,
-        full_name=req.full_name,
-        matric_no=req.student_id,
-        department=req.department,
-        current_level=req.level,
-        enrollment_year=2024 # Or derive from somewhere
-    )
-    db.add(new_student)
-    db.commit()
-    db.refresh(new_student)
-    
-    return {"message": "Student enrolled successfully", "student": new_student}
-
-@app.get("/admin/students")
-def get_all_students(db: Session = Depends(get_db)):
-    students = db.query(models.Student).all()
-    result = []
-    for s in students:
-        t = db.query(models.Transcript).filter(models.Transcript.student_id == s.id).first()
-        result.append({
-            "id": s.id,
-            "student_id": s.matric_no,
-            "full_name": s.full_name,
-            "level": s.current_level,
-            "department": s.department,
-            "cgpa": t.cgpa if t else 0.0,
-            "degree_classification": t.degree_classification if t else "N/A"
-        })
-    return result
-
-@app.post("/grades/upload", response_model=schemas.GradeResponse)
-def upload_grade(grade: schemas.GradeUpload, db: Session = Depends(get_db)):
-    # 1. Validate student and course exist
-    student = db.query(models.Student).filter(models.Student.id == grade.student_id).first()
-    if not student:
-        raise HTTPException(status_code=404, detail="Student not found")
-        
-    course = db.query(models.Course).filter(models.Course.course_code == grade.course_code).first()
-    if not course:
-        raise HTTPException(status_code=404, detail="Course not found")
-
-    # 2. Calculate grade point
-    grade_letter, gp = calculate_grade_point(grade.score)
-    
-    # 3. Create Grade record
-    new_grade = models.Grade(
-        student_id=grade.student_id,
-        course_code=grade.course_code,
-        score=grade.score,
-        grade_letter=grade_letter,
-        gp=gp
-    )
-    db.add(new_grade)
-    
-    # 4. Trigger CGPA Recalculation
-    # Get all previous grades for the student
-    all_grades = db.query(models.Grade).filter(models.Grade.student_id == grade.student_id).all()
-    
-    # Combine previous grades and the new grade for calculation
-    calc_grades = []
-    for g in all_grades:
-        c = db.query(models.Course).filter(models.Course.course_code == g.course_code).first()
-        if c:
-            calc_grades.append({"gp": g.gp, "credit_units": c.credit_units})
-            
-    # Include the new grade as well since it hasn't been committed yet
-    calc_grades.append({"gp": gp, "credit_units": course.credit_units})
-            
-    new_cgpa = calculate_cgpa(calc_grades)
-    
-    # Update Transcript or create one
-    transcript = db.query(models.Transcript).filter(models.Transcript.student_id == grade.student_id).first()
-    if transcript:
-        transcript.cgpa = new_cgpa
-        transcript.degree_classification = get_degree_classification(new_cgpa)
-    else:
-        new_transcript = models.Transcript(
-            student_id=grade.student_id, 
-            cgpa=new_cgpa, 
-            degree_classification=get_degree_classification(new_cgpa)
-        )
-        db.add(new_transcript)
-
-    db.commit()
-    db.refresh(new_grade)
-    return new_grade
-
-@app.post("/auth/login")
+@app.post("/auth/login", response_model=schemas.LoginResponse)
 def login(request: schemas.LoginRequest, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.username == request.username).first()
-    # Using simplistic check since we just mocked fake hashes
-    if not user or not user.password_hash.startswith(request.password):
+    if not user or user.password_hash != request.password:
         raise HTTPException(status_code=401, detail="Invalid username or password")
     
-    student_profile = None
-    if user.role == models.RoleEnum.student:
-        student = db.query(models.Student).filter(models.Student.user_id == user.id).first()
-        if student:
-            student_profile = {"id": student.id, "department": student.department, "level": student.current_level}
+    return {"message": "Login successful", "user": user}
 
-    return {
-        "message": "Login successful",
-        "user": {
-            "id": user.id,
-            "username": user.username,
-            "role": user.role
-        },
-        "student_profile": student_profile
-    }
-
-@app.get("/courses", response_model=list[schemas.CourseResponse])
-def get_courses(db: Session = Depends(get_db)):
-    return db.query(models.Course).all()
-
-@app.get("/students/{student_id}/grades")
-def get_student_grades(student_id: int, db: Session = Depends(get_db)):
-    student = db.query(models.Student).filter(models.Student.id == student_id).first()
-    if not student:
-        raise HTTPException(status_code=404, detail="Student not found")
-
-    grades = db.query(models.Grade).filter(models.Grade.student_id == student_id).all()
-    transcript = db.query(models.Transcript).filter(models.Transcript.student_id == student_id).first()
+@app.post("/courses/{user_id}", status_code=status.HTTP_200_OK)
+def save_courses(user_id: int, batch: schemas.CourseRecordBatch, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    # Delete existing records for this user (full replace strategy)
+    db.query(models.CourseRecord).filter(models.CourseRecord.user_id == user_id).delete()
     
-    grade_data = []
-    for g in grades:
-        course = db.query(models.Course).filter(models.Course.course_code == g.course_code).first()
-        grade_data.append({
-            "course_code": g.course_code,
-            "course_title": course.course_title if course else "Unknown",
-            "credit_units": course.credit_units if course else 0,
-            "semester": course.semester if course else "Unknown",
-            "level": course.level if course else None,
-            "score": g.score,
-            "grade_letter": g.grade_letter,
-            "gp": g.gp
+    for c in batch.courses:
+        gp = letter_to_point(c.grade)
+        record = models.CourseRecord(
+            user_id=user_id,
+            course_code=c.course_code,
+            course_title=c.course_title,
+            credit_units=c.credit_units,
+            grade=c.grade.upper(),
+            grade_point=gp,
+            semester=c.semester,
+            level=c.level
+        )
+        db.add(record)
+        
+    db.commit()
+    return {"message": "Courses saved successfully"}
+
+@app.get("/transcript/{user_id}", response_model=schemas.TranscriptResponse)
+def get_transcript(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    records = db.query(models.CourseRecord).filter(models.CourseRecord.user_id == user_id).all()
+    
+    # Group by level, then semester
+    levels_data = defaultdict(lambda: defaultdict(list))
+    all_grades = []
+    
+    for r in records:
+        levels_data[r.level][r.semester].append(r)
+        all_grades.append({'gp': r.grade_point, 'credit_units': r.credit_units})
+        
+    total_cgpa = calculate_cgpa(all_grades)
+    degree_class = get_degree_classification(total_cgpa)
+    
+    transcript_levels = []
+    for level, semesters in sorted(levels_data.items()):
+        sem_list = []
+        for sem, courses in semesters.items():
+            sem_grades = [{'gp': c.grade_point, 'credit_units': c.credit_units} for c in courses]
+            sem_gpa = calculate_gpa(sem_grades)
+            sem_list.append({
+                "semester": sem,
+                "courses": courses,
+                "gpa": sem_gpa
+            })
+        transcript_levels.append({
+            "level": level,
+            "semesters": sem_list
         })
         
     return {
-        "student_id": student.id,
-        "cgpa": transcript.cgpa if transcript else 0.0,
-        "degree_classification": transcript.degree_classification if transcript else "N/A",
-        "grades": grade_data
+        "student": user,
+        "levels": transcript_levels,
+        "total_cgpa": total_cgpa,
+        "degree_classification": degree_class
     }
 
-@app.get("/students/{student_id}/profile", response_model=schemas.StudentProfileResponse)
-def get_student_profile(student_id: int, db: Session = Depends(get_db)):
-    student = db.query(models.Student).filter(models.Student.id == student_id).first()
-    if not student:
-        raise HTTPException(status_code=404, detail="Student not found")
-    return student
-
-@app.put("/students/{student_id}/profile", response_model=schemas.StudentProfileResponse)
-def update_student_profile(student_id: int, profile: schemas.StudentProfileUpdate, db: Session = Depends(get_db)):
-    student = db.query(models.Student).filter(models.Student.id == student_id).first()
-    if not student:
-        raise HTTPException(status_code=404, detail="Student not found")
-    
-    update_data = profile.dict(exclude_unset=True)
-    for key, value in update_data.items():
-        setattr(student, key, value)
+@app.get("/admin/students", response_model=List[schemas.AdminStudentView])
+def get_all_students(db: Session = Depends(get_db)):
+    students = db.query(models.User).filter(models.User.role == "Student").all()
+    result = []
+    for s in students:
+        records = db.query(models.CourseRecord).filter(models.CourseRecord.user_id == s.id).all()
+        all_grades = [{'gp': r.grade_point, 'credit_units': r.credit_units} for r in records]
+        cgpa = calculate_cgpa(all_grades)
+        degree = get_degree_classification(cgpa)
         
-    db.commit()
-    db.refresh(student)
-    return student
-
-@app.post("/students/{student_id}/register_courses")
-def register_courses(student_id: int, request: schemas.CourseRegistrationRequest, db: Session = Depends(get_db)):
-    student = db.query(models.Student).filter(models.Student.id == student_id).first()
-    if not student:
-        raise HTTPException(status_code=404, detail="Student not found")
-        
-    # Get currently registered courses
-    existing_grades = db.query(models.Grade).filter(models.Grade.student_id == student_id).all()
-    existing_codes = {g.course_code: g for g in existing_grades}
-    
-    requested_codes = set(request.course_codes)
-    
-    # Check for deregistration
-    courses_to_remove = []
-    for code, grade in existing_codes.items():
-        if code not in requested_codes:
-            # Check if graded
-            if grade.grade_letter != '–' or grade.score > 0:
-                raise HTTPException(status_code=400, detail=f"Cannot deregister {code}. Please ask for admin approval.")
-            courses_to_remove.append(grade)
-            
-    # Remove courses
-    for grade in courses_to_remove:
-        db.delete(grade)
-        
-    # Add new courses
-    added_count = 0
-    for code in requested_codes:
-        if code not in existing_codes:
-            new_reg = models.Grade(
-                student_id=student_id,
-                course_code=code,
-                score=0.0,
-                grade_letter='–',
-                gp=0.0
-            )
-            db.add(new_reg)
-            added_count += 1
-            
-    db.commit()
-    return {"message": f"Successfully updated registration. Added {added_count}, Removed {len(courses_to_remove)}."}
-
+        result.append({
+            "id": s.id,
+            "full_name": s.full_name or "Unknown",
+            "username": s.username,
+            "level": s.level or 100,
+            "total_cgpa": cgpa,
+            "degree_classification": degree
+        })
+    return result

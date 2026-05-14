@@ -1,13 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
-import AdminDashboard from './pages/AdminDashboard';
-import StudentPortal from './pages/StudentPortal';
-import StudentPrint from './pages/StudentPrint';
-import CourseRegistration from './pages/CourseRegistration';
-import Students from './pages/admin/Students';
-import Courses from './pages/admin/Courses';
-import Transcripts from './pages/admin/Transcripts';
-import AdminSettings from './pages/admin/AdminSettings';
+import Auth from './pages/Auth';
+import Dashboard from './pages/Dashboard';
+import Transcript from './pages/Transcript';
+import Admin from './pages/Admin';
 import './index.css';
 
 function App() {
@@ -15,19 +10,11 @@ function App() {
     <Router>
       <div className="app-container">
         <Routes>
-          <Route path="/"                      element={<Navigate to="/login" replace />} />
-          <Route path="/login"                 element={<Login />} />
-          {/* Admin routes */}
-          <Route path="/admin"                 element={<AdminDashboard />} />
-          <Route path="/admin/students"        element={<Students />} />
-          <Route path="/admin/courses"         element={<Courses />} />
-          <Route path="/admin/transcripts"     element={<Transcripts />} />
-          <Route path="/admin/settings"        element={<AdminSettings />} />
-          {/* Student routes */}
-          <Route path="/student"               element={<StudentPortal />} />
-          <Route path="/student/register"      element={<CourseRegistration />} />
-          <Route path="/student/print"         element={<StudentPrint />} />
-          <Route path="/student/transcripts"   element={<StudentPrint />} />
+          <Route path="/" element={<Navigate to="/auth" replace />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/transcript" element={<Transcript />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </div>
     </Router>

@@ -1,91 +1,67 @@
 from pydantic import BaseModel
 from typing import Optional, List
-from enum import Enum
-from datetime import date
 
-class RoleEnum(str, Enum):
-    admin = "Admin"
-    student = "Student"
-
-class UserBase(BaseModel):
-    username: str
-    role: RoleEnum
-
-class UserCreate(UserBase):
+class UserCreate(BaseModel):
+    full_name: str
+    username: str # matric_no
     password: str
+    level: int
 
-class UserResponse(UserBase):
+class UserResponse(BaseModel):
     id: int
+    full_name: str
+    username: str
+    level: int
+    role: str
+    
     class Config:
         from_attributes = True
-
-class GradeUpload(BaseModel):
-    student_id: int
-    course_code: str
-    score: float
-
-class GradeResponse(GradeUpload):
-    id: int
-    grade_letter: str
-    gp: float
-    class Config:
-        from_attributes = True
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-class TokenData(BaseModel):
-    username: Optional[str] = None
 
 class LoginRequest(BaseModel):
     username: str
     password: str
 
-class CourseResponse(BaseModel):
-    id: int
+class LoginResponse(BaseModel):
+    message: str
+    user: UserResponse
+
+class CourseRecordCreate(BaseModel):
     course_code: str
     course_title: str
     credit_units: int
+    grade: str # A, B, C, D, E, F
     semester: str
-    level: Optional[int] = None
-    
+    level: int
+
+class CourseRecordBatch(BaseModel):
+    courses: List[CourseRecordCreate]
+
+class CourseRecordResponse(CourseRecordCreate):
+    id: int
+    grade_point: float
+
     class Config:
         from_attributes = True
+
+class TranscriptSemester(BaseModel):
+    semester: str
+    courses: List[CourseRecordResponse]
+    gpa: float
+
+class TranscriptLevel(BaseModel):
+    level: int
+    semesters: List[TranscriptSemester]
 
 class TranscriptResponse(BaseModel):
-    student_id: int
-    cgpa: float
-    degree_classification: Optional[str] = None
-    
-    class Config:
-        from_attributes = True
+    student: UserResponse
+    levels: List[TranscriptLevel]
+    total_cgpa: float
+    degree_classification: str
 
-class StudentProfileBase(BaseModel):
-    full_name: Optional[str] = None
-    matric_no: Optional[str] = None
-    faculty: Optional[str] = None
-    department: Optional[str] = None
-    current_level: Optional[int] = None
-    student_type: Optional[str] = None
-    session: Optional[str] = None
-    enrollment_year: Optional[int] = None
-
-class StudentProfileUpdate(StudentProfileBase):
-    pass
-
-class StudentProfileResponse(StudentProfileBase):
+class AdminStudentView(BaseModel):
     id: int
-    user_id: int
-    
-    class Config:
-        from_attributes = True
-
-class CourseRegistrationRequest(BaseModel):
-    course_codes: List[str]
-
-class EnrollStudentRequest(BaseModel):
-    student_id: str
     full_name: str
+    username: str
     level: int
-    department: str
+    total_cgpa: float
+    degree_classification: str
